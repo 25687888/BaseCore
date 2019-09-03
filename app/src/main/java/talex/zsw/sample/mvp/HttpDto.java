@@ -12,12 +12,10 @@ import java.util.Map;
 import talex.zsw.basecore.util.JsonTool;
 import talex.zsw.basecore.util.LogTool;
 import talex.zsw.basecore.util.RegTool;
-import talex.zsw.sample.entitys.BaseModel;
 
 /**
- * 作用: 网络请求参数状态
- * 作者: 赵小白 email:edisonzsw@icloud.com 
- * 日期: 16/5/18 00:05 
+ * 作用：网络请求参数状态
+ * 作者：赵小白 email:vvtale@gmail.com  
  * 修改人：
  * 修改时间：
  * 修改备注：
@@ -43,31 +41,35 @@ public class HttpDto implements Serializable
 
 	private Map<String, String> params;// 请求参数
 	private Map<String, String> heads;// 请求头
-	private BaseModel model;
+	private Object model;
 	private String bodyStr;
+	private String method;
 	private String bodyJson;
 	private Object tag;
 
 	// -------------- 基础组 --------------
 	public HttpDto(String url)
 	{
-		this(url, new BaseModel(), false);
+		this(url, null, false);
 	}
 
-	public HttpDto(String url, BaseModel model)
+	public HttpDto(String url, Object model)
 	{
 		this(url, model, false);
 	}
 
 	// -------------- 终极实体 --------------
-	public HttpDto(String url, BaseModel model, boolean silence)
+	public HttpDto(String url, Object model, boolean silence)
 	{
 		this.url = url;
 		this.fullUrl = url;
 		this.model = model;
 		this.silence = silence;
 
-		params = JsonTool.getMapFromObj(model);
+		if(model != null)
+		{
+			params = JsonTool.getMapFromObj(model);
+		}
 		heads = new HashMap<>();
 	}
 
@@ -200,6 +202,17 @@ public class HttpDto implements Serializable
 		return this;
 	}
 
+	public String getMethod()
+	{
+		return method;
+	}
+
+	public HttpDto setMethod(String method)
+	{
+		this.method = method;
+		return this;
+	}
+
 	public String getFullUrl()
 	{
 		return fullUrl;
@@ -256,15 +269,25 @@ public class HttpDto implements Serializable
 		return cacheMode;
 	}
 
-	public BaseModel getModel()
+	public Object getModel()
 	{
 		return model;
 	}
 
-	public HttpDto setModel(BaseModel model)
+	public HttpDto setModel(Object model)
 	{
 		this.model = model;
+		params = JsonTool.getMapFromObj(model);
 		return this;
+	}
+
+	public void addParams(String key, String value)
+	{
+		if(params == null)
+		{
+			params = new HashMap<>();
+		}
+		params.put(key, value);
 	}
 
 	public int getType()

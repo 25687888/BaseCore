@@ -34,15 +34,13 @@ import talex.zsw.sample.mvp._Presenter;
 import talex.zsw.sample.mvp._View;
 
 /**
- * 作用: 基于MVP架构的Activity基类
- * 作者: 赵小白 email:edisonzsw@icloud.com
- * 日期: 2016 16/3/3 10:46 
+ * 作用：基于MVP架构的Activity基类
+ * 作者：赵小白 email:vvtale@gmail.com  
  * 修改人：
  * 修改时间：
  * 修改备注：
  */
-public abstract class BaseMVPActivity<T extends _Presenter> extends RxAppCompatActivity
-	implements _View
+public abstract class BaseMVPActivity<T extends _Presenter> extends RxAppCompatActivity implements _View
 {
 	protected T mPresenter;
 	protected MyApplication mApplication;
@@ -62,19 +60,17 @@ public abstract class BaseMVPActivity<T extends _Presenter> extends RxAppCompatA
 	@Override protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		getWindow().setBackgroundDrawable(null);
 		// 严苛模式
 		if(BuildConfig.DEBUG)
 		{
-			StrictMode.setThreadPolicy(
-				new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
-			StrictMode
-				.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
+			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
+			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
 		}
 
 		mApplication = getAppApplication();
 		ActivityTool.addActivity(this);
-		mInputMethodManager = (InputMethodManager) this
-			.getSystemService(Context.INPUT_METHOD_SERVICE);
+		mInputMethodManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
 		mSweetAlertDialog = new SweetAlertDialog(this);
 		mSweetAlertDialog.setCancelable(false);
 
@@ -112,6 +108,10 @@ public abstract class BaseMVPActivity<T extends _Presenter> extends RxAppCompatA
 	{
 		activityState = 1;
 		super.onStart();
+		if(mPresenter != null)
+		{
+			mPresenter.onStart();
+		}
 	}
 
 	@Override protected void onResume()
@@ -141,6 +141,19 @@ public abstract class BaseMVPActivity<T extends _Presenter> extends RxAppCompatA
 	{
 		activityState = -2;
 		super.onStop();
+		if(mPresenter != null)
+		{
+			mPresenter.onStop();
+		}
+	}
+
+	@Override protected void onRestart()
+	{
+		super.onRestart();
+		if(mPresenter != null)
+		{
+			mPresenter.onRestart();
+		}
 	}
 
 	@Override protected void onDestroy()
@@ -167,6 +180,16 @@ public abstract class BaseMVPActivity<T extends _Presenter> extends RxAppCompatA
 		System.runFinalization();
 		Runtime.getRuntime().gc();
 		System.gc();
+	}
+
+	@Override public void onVisible()
+	{
+
+	}
+
+	@Override public void onInvisible()
+	{
+
 	}
 
 	@Override public void getData(boolean silence)
@@ -236,7 +259,8 @@ public abstract class BaseMVPActivity<T extends _Presenter> extends RxAppCompatA
 	}
 
 	private static long mLastClickTime;
-	public static final int MIN_CLICK_DELAY_TIME = 500;
+	public static final int MIN_CLICK_DELAY_TIME = 400;
+
 	@Override public boolean isFastClick()
 	{
 		// 当前时间
@@ -268,8 +292,7 @@ public abstract class BaseMVPActivity<T extends _Presenter> extends RxAppCompatA
 		return 0;
 	}
 
-	public SweetAlertDialog.OnSweetClickListener finishListener
-		= new SweetAlertDialog.OnSweetClickListener()
+	public SweetAlertDialog.OnSweetClickListener finishListener = new SweetAlertDialog.OnSweetClickListener()
 	{
 		@Override public void onClick(SweetAlertDialog sweetAlertDialog)
 		{
@@ -300,8 +323,7 @@ public abstract class BaseMVPActivity<T extends _Presenter> extends RxAppCompatA
 		}
 		else
 		{
-			mSweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE)
-				.setTitleText("正在加载数据");
+			mSweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE).setTitleText("正在加载数据");
 			mSweetAlertDialog.setCancelable(false);
 			mSweetAlertDialog.show();
 		}
@@ -318,9 +340,14 @@ public abstract class BaseMVPActivity<T extends _Presenter> extends RxAppCompatA
 		}, null);
 	}
 
-	@Override public void showDialog(int type, String title, String content, String confirmText,
-		String cancelText, SweetAlertDialog.OnSweetClickListener confirmListener,
-		SweetAlertDialog.OnSweetClickListener cancelListener)
+	@Override
+	public void showDialog(int type, String title, String content, String confirmText, SweetAlertDialog.OnSweetClickListener confirmListener)
+	{
+		showDialog(type, title, content, confirmText, null, confirmListener, null);
+	}
+
+	@Override
+	public void showDialog(int type, String title, String content, String confirmText, String cancelText, SweetAlertDialog.OnSweetClickListener confirmListener, SweetAlertDialog.OnSweetClickListener cancelListener)
 	{
 		if(mSweetAlertDialog != null && mSweetAlertDialog.isShowing())
 		{
@@ -411,9 +438,12 @@ public abstract class BaseMVPActivity<T extends _Presenter> extends RxAppCompatA
 		startActivity(intent);
 	}
 
-	@Subscribe
-	public void onEvent(NotingEvent event){
+	@Subscribe public void onEvent(NotingEvent event)
+	{
 	}
 
 	private class NotingEvent{}
+
+
+
 }

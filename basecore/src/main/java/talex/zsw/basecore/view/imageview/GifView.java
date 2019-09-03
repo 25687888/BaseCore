@@ -14,6 +14,7 @@ import talex.zsw.basecore.R;
 
 /**
  * Created by Cuneyt on 4.10.2015.
+ * 可以显示Gif的View
  */
 public class GifView extends View
 {
@@ -278,7 +279,7 @@ public class GifView extends View
 
 		mMovie.setTime(mCurrentAnimationTime);
 
-		canvas.save(Canvas.MATRIX_SAVE_FLAG);
+		canvas.save();
 		canvas.scale(mScale, mScale);
 		mMovie.draw(canvas, mLeft / mScale, mTop / mScale);
 		canvas.restore();

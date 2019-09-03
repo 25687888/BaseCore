@@ -33,20 +33,18 @@ import talex.zsw.sample.mvp._Presenter;
 import talex.zsw.sample.mvp._View;
 
 /**
- * 作用: 基于MVP架构的Fragment基类
- * 作者: 赵小白 email:edisonzsw@icloud.com
- * 日期: 2016 16/3/3 10:46 
+ * 作用：基于MVP架构的Fragment基类
+ * 作者：赵小白 email:vvtale@gmail.com  
  * 修改人：
  * 修改时间：
  * 修改备注：
  */
-public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
-	implements _View
+public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment implements _View
 {
 	// 将代理类通用行为抽出来
 	protected T mPresenter;
 
-	private SweetAlertDialog mSweetAlertDialog;
+	public SweetAlertDialog mSweetAlertDialog;
 	private LayoutInflater inflater;
 	private InputMethodManager mInputMethodManager;
 	private ViewGroup container;
@@ -59,14 +57,12 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 
 	protected abstract void initData();
 
-	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-									   Bundle savedInstanceState)
+	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		this.inflater = inflater;
 		this.container = container;
 
-		mInputMethodManager =
-			(InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		mInputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 		mSweetAlertDialog = new SweetAlertDialog(getActivity());
 		mSweetAlertDialog.setCancelable(false);
 		KeyboardTool.hideSoftInput(getActivity());
@@ -75,7 +71,8 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 		{
 			initArgs(getArguments());
 			initView(savedInstanceState);
-		} catch (Exception e)
+		}
+		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -86,19 +83,94 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 	@Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
 	{
 		initData();
+		isPrepared = true;
+		if(getUserVisibleHint())
+		{
+			isVisible = true;
+			onVisible();
+		}
 		super.onViewCreated(view, savedInstanceState);
 	}
 
 	protected void setContentView(int layout)
 	{
 		mView = inflater.inflate(layout, container, false);
-		ButterKnife.bind(this,mView);
+		ButterKnife.bind(this, mView);
+	}
+
+	/**
+	 * 如果是与ViewPager一起使用，调用的是setUserVisibleHint
+	 *
+	 * @param isVisibleToUser 是否显示出来了
+	 */
+	@Override public void setUserVisibleHint(boolean isVisibleToUser)
+	{
+		super.setUserVisibleHint(isVisibleToUser);
+		if(!isPrepared)
+		{
+			return;
+		}
+		if(getUserVisibleHint())
+		{
+			isVisible = true;
+			onVisible();
+		}
+		else
+		{
+			isVisible = false;
+			onInvisible();
+		}
+	}
+
+	/**
+	 * 如果是通过FragmentTransaction的show和hide的方法来控制显示，调用的是onHiddenChanged.
+	 * 若是初始就show的Fragment 为了触发该事件 需要先hide再show
+	 *
+	 * @param hidden hidden True if the fragment is now hidden, false if it is not
+	 *               visible.
+	 */
+	@Override public void onHiddenChanged(boolean hidden)
+	{
+		super.onHiddenChanged(hidden);
+		if(!isPrepared)
+		{
+			return;
+		}
+		if(!hidden)
+		{
+			isVisible = true;
+			onVisible();
+		}
+		else
+		{
+			isVisible = false;
+			onInvisible();
+		}
+	}
+
+	@Override public void onVisible()
+	{
+
+	}
+
+	@Override public void onInvisible()
+	{
+
+	}
+
+	@Override public void onStart()
+	{
+		super.onStart();
+		if(mPresenter != null)
+		{
+			mPresenter.onStart();
+		}
 	}
 
 	@Override public void onResume()
 	{
 		super.onResume();
-		if (mPresenter != null)
+		if(mPresenter != null)
 		{
 			mPresenter.onResume();
 		}
@@ -113,9 +185,18 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 		super.onPause();
 	}
 
+	@Override public void onStop()
+	{
+		super.onStop();
+		if(mPresenter != null)
+		{
+			mPresenter.onStop();
+		}
+	}
+
 	@Override public void onDestroyView()
 	{
-		if (mSweetAlertDialog != null && mSweetAlertDialog.isShowing())
+		if(mSweetAlertDialog != null && mSweetAlertDialog.isShowing())
 		{
 			mSweetAlertDialog.dismiss();
 			mSweetAlertDialog = null;
@@ -124,7 +205,7 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 		EventBus.getDefault().unregister(this);
 		super.onDestroyView();
 		ViewGroup parent = (ViewGroup) mView.getParent();
-		if (null != parent)
+		if(null != parent)
 		{
 			parent.removeView(mView);
 		}
@@ -133,7 +214,7 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 	@Override public void onDestroy()
 	{
 		super.onDestroy();
-		if (mPresenter != null)
+		if(mPresenter != null)
 		{
 			mPresenter.onDestroy();
 		}
@@ -143,11 +224,12 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 	{
 		try
 		{
-			Field childFragmentManager =
-				android.support.v4.app.Fragment.class.getDeclaredField("mChildFragmentManager");
+			Field childFragmentManager
+				= android.support.v4.app.Fragment.class.getDeclaredField("mChildFragmentManager");
 			childFragmentManager.setAccessible(true);
 			childFragmentManager.set(this, null);
-		} catch (NoSuchFieldException | IllegalAccessException e)
+		}
+		catch(NoSuchFieldException | IllegalAccessException e)
 		{
 			throw new RuntimeException(e);
 		}
@@ -184,12 +266,11 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 
 	@Override public Handler getHandler()
 	{
-		if (mainHandler == null)
+		if(mainHandler == null)
 		{
 			mainHandler = new Handler();
 		}
 		return mainHandler;
-
 	}
 
 	@Override public Context getCont()
@@ -199,7 +280,7 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 
 	@Override public void showToast(String msg)
 	{
-		if (!RegTool.isNullString(msg))
+		if(!RegTool.isNullString(msg))
 		{
 			Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
 		}
@@ -217,7 +298,8 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 	}
 
 	private static long mLastClickTime;
-	public static final int MIN_CLICK_DELAY_TIME = 500;
+	public static final int MIN_CLICK_DELAY_TIME = 400;
+
 	@Override public boolean isFastClick()
 	{
 		// 当前时间
@@ -232,15 +314,14 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 		return false;
 	}
 
-	public SweetAlertDialog.OnSweetClickListener finishListener =
-		new SweetAlertDialog.OnSweetClickListener()
+	public SweetAlertDialog.OnSweetClickListener finishListener = new SweetAlertDialog.OnSweetClickListener()
+	{
+		@Override public void onClick(SweetAlertDialog sweetAlertDialog)
 		{
-			@Override public void onClick(SweetAlertDialog sweetAlertDialog)
-			{
-				sweetAlertDialog.dismissWithAnimation();
-				getActivity().finish();
-			}
-		};
+			sweetAlertDialog.dismissWithAnimation();
+			getActivity().finish();
+		}
+	};
 
 	@Override public SweetAlertDialog.OnSweetClickListener getFinishListener()
 	{
@@ -254,16 +335,15 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 
 	@Override public void showDialog()
 	{
-		if (mSweetAlertDialog != null && mSweetAlertDialog.isShowing())
+		if(mSweetAlertDialog != null && mSweetAlertDialog.isShowing())
 		{
 			mSweetAlertDialog.setTitleText("正在加载数据");
 			mSweetAlertDialog.changeAlertType(SweetAlertDialog.PROGRESS_TYPE);
 		}
 		else
 		{
-			mSweetAlertDialog =
-				new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE)
-					.setTitleText("正在加载数据");
+			mSweetAlertDialog
+				= new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE).setTitleText("正在加载数据");
 			mSweetAlertDialog.setCancelable(false);
 			mSweetAlertDialog.show();
 		}
@@ -280,12 +360,16 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 		}, null);
 	}
 
-	@Override public void showDialog(int type, String title, String content, String confirmText,
-									 String cancelText,
-									 SweetAlertDialog.OnSweetClickListener confirmListener,
-									 SweetAlertDialog.OnSweetClickListener cancelListener)
+	@Override
+	public void showDialog(int type, String title, String content, String confirmText, SweetAlertDialog.OnSweetClickListener confirmListener)
 	{
-		if (mSweetAlertDialog != null && mSweetAlertDialog.isShowing())
+		showDialog(type, title, content, confirmText, null, confirmListener, null);
+	}
+
+	@Override
+	public void showDialog(int type, String title, String content, String confirmText, String cancelText, SweetAlertDialog.OnSweetClickListener confirmListener, SweetAlertDialog.OnSweetClickListener cancelListener)
+	{
+		if(mSweetAlertDialog != null && mSweetAlertDialog.isShowing())
 		{
 			mSweetAlertDialog.changeAlertType(type);
 		}
@@ -295,7 +379,7 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 			mSweetAlertDialog.setCancelable(false);
 		}
 		// Title
-		if (!RegTool.isNullString(title))
+		if(!RegTool.isNullString(title))
 		{
 			mSweetAlertDialog.setTitleText(title);
 		}
@@ -304,7 +388,7 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 			mSweetAlertDialog.setTitleText("");
 		}
 		// content
-		if (!RegTool.isNullString(content))
+		if(!RegTool.isNullString(content))
 		{
 			mSweetAlertDialog.setContentText(content);
 		}
@@ -313,12 +397,12 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 			mSweetAlertDialog.showContentText(false);
 		}
 		// confirmText
-		if (!RegTool.isNullString(confirmText))
+		if(!RegTool.isNullString(confirmText))
 		{
 			mSweetAlertDialog.setConfirmText(confirmText);
 		}
 		// cancelText
-		if (!RegTool.isNullString(cancelText))
+		if(!RegTool.isNullString(cancelText))
 		{
 			mSweetAlertDialog.setCancelText(cancelText);
 		}
@@ -327,7 +411,7 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 			mSweetAlertDialog.showCancelButton(false);
 		}
 		// confirmListener
-		if (confirmListener != null)
+		if(confirmListener != null)
 		{
 			mSweetAlertDialog.setConfirmClickListener(confirmListener);
 		}
@@ -342,7 +426,7 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 			});
 		}
 		// confirmListener
-		if (confirmListener != null)
+		if(confirmListener != null)
 		{
 			mSweetAlertDialog.setCancelClickListener(cancelListener);
 		}
@@ -373,7 +457,8 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 			Field field = c.getField("status_bar_height");
 			int x = Integer.parseInt(field.get(obj).toString());
 			return getResources().getDimensionPixelSize(x);
-		} catch (Exception e)
+		}
+		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -390,8 +475,14 @@ public abstract class BaseMVPFragment<T extends _Presenter> extends RxFragment
 		getActivity().startActivity(intent);
 	}
 
-	@Subscribe
-	public void onEvent(NotingEvent event){
+	// --------------- Fragment是否可见监听事件 --------------
+	public boolean isVisible;
+	public boolean isPrepared;
+
+	// --------------- EventBus --------------
+
+	@Subscribe public void onEvent(NotingEvent event)
+	{
 	}
 
 	private class NotingEvent{}

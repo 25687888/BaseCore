@@ -1,6 +1,7 @@
 package talex.zsw.basecore.util;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -11,20 +12,18 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
+import talex.zsw.basecore.R;
+import talex.zsw.basecore.crash.CaocConfig;
 import talex.zsw.basecore.interfaces.OnSimpleListener;
 import talex.zsw.basecore.util.cockroach.Cockroach;
 
 /**
- * RxTools的常用工具类
+ * Tool的常用工具类
  */
 public class Tool
 {
 
 	@SuppressLint("StaticFieldLeak") private static Context context;
-	private static long lastClickTime;
 	private boolean isDebug = false;
 
 	public boolean isDebug()
@@ -41,36 +40,91 @@ public class Tool
 	 * 初始化工具类
 	 *
 	 * @param context 上下文
+	 * @param isDebu
 	 */
 	public static void init(Context context, boolean isDebu)
 	{
+		init(context, isDebu, false);
+	}
+
+	/**
+	 * 初始化工具类
+	 *
+	 * @param context        上下文
+	 * @param isDebu
+	 * @param isMulitProcess true 多进程共享数据  fasle 单进程存储数据
+	 */
+	public static void init(Context context, boolean isDebu, boolean isMulitProcess)
+	{
 		Tool.context = context.getApplicationContext();
-		SpTool.init(context);
+		if(isMulitProcess)
+		{
+			SpTool.initMulitProcess(context);
+		}
+		else
+		{
+			SpTool.init(context);
+		}
 		if(!isDebu)
 		{
 			CrashTool.init(context);
 			LogTool.getConfig().setConsoleSwitch(false);
-			Cockroach.install(new Cockroach.ExceptionHandler()
-			{
-				@Override public void handlerException(final Thread thread, final Throwable throwable)
-				{
-					new Handler(Looper.getMainLooper()).post(new Runnable()
-					{
-						@Override public void run()
-						{
-							try
-							{
-								LogTool.e(thread+"\n"+throwable.toString());
-								throwable.printStackTrace();
-							}
-							catch(Throwable ignored)
-							{
-							}
-						}
-					});
-				}
-			});
 		}
+	}
+
+	/**
+	 * 永不崩溃的APP——Crash防护
+	 */
+	public static void initCockroah()
+	{
+		Cockroach.install(new Cockroach.ExceptionHandler()
+		{
+			@Override public void handlerException(final Thread thread, final Throwable throwable)
+			{
+				new Handler(Looper.getMainLooper()).post(new Runnable()
+				{
+					@Override public void run()
+					{
+						try
+						{
+							LogTool.e(thread+"\n"+throwable.toString());
+							throwable.printStackTrace();
+						}
+						catch(Throwable ignored)
+						{
+						}
+					}
+				});
+			}
+		});
+	}
+
+	/**
+	 * 避免闪退
+	 *
+	 * @param errorRes 错误提示图标,不传则显示一个 bug
+	 * @param cls      重启的Activity
+	 */
+	public static void initCaoc(int errorRes, Class<? extends Activity> cls)
+	{
+		CaocConfig.Builder builder = CaocConfig.Builder.create();
+		builder.backgroundMode(CaocConfig.BACKGROUND_MODE_SILENT) //背景模式,开启沉浸式
+		       .enabled(true) //是否启动全局异常捕获
+		       .showErrorDetails(true) //是否显示错误详细信息
+		       .trackActivities(true) //是否跟踪Activity
+		       .minTimeBetweenCrashesMs(2000); //崩溃的间隔时间(毫秒)
+		if(errorRes != 0)
+		{
+			builder.errorDrawable(errorRes); //错误图标
+		}
+		if(cls != null)
+		{
+			builder.showRestartButton(true) //是否显示重启按钮
+			       .restartActivity(cls); //重新启动后的activity
+		}
+		// builder.errorActivity(YourCustomErrorActivity.class) //崩溃后的错误activity
+		//         .eventListener(new YourCustomEventListener()) //崩溃后的错误监听
+		builder.apply();
 	}
 
 	/**
@@ -79,6 +133,7 @@ public class Tool
 	public static void uninstall()
 	{
 		Cockroach.uninstall();
+		ActivityTool.AppExit(context);
 	}
 
 	/**
@@ -96,20 +151,35 @@ public class Tool
 		}
 		throw new NullPointerException("请先调用init()方法");
 	}
-	//==============================================================================================延时任务封装 end
 
-	//----------------------------------------------------------------------------------------------延时任务封装 start
+	//---------------------------------------------------------------------------------------------- 其他工具类
+
+	/**
+	 * 延时任务
+	 *
+	 * @param delayTime        延时时间
+	 * @param onSimpleListener 延时后调用方法
+	 */
 	public static void delayToDo(long delayTime, final OnSimpleListener onSimpleListener)
 	{
-		new Handler().postDelayed(new Runnable()
+		try
 		{
-			@Override public void run()
+			new Handler().postDelayed(new Runnable()
 			{
-				//execute the task
-				onSimpleListener.doSomething();
-			}
-		}, delayTime);
+				@Override public void run()
+				{
+					//execute the task
+					onSimpleListener.doSomething();
+				}
+			}, delayTime);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
+
+	private static android.os.CountDownTimer timer;
 
 	/**
 	 * 倒计时
@@ -118,31 +188,74 @@ public class Tool
 	 * @param waitTime 倒计时总时长
 	 * @param interval 倒计时的间隔时间
 	 * @param hint     倒计时完毕时显示的文字
+	 * @param listener 结束时调用的接口
 	 */
-	public static void countDown(final TextView textView, long waitTime, long interval, final String hint)
+	public static void countDown(final TextView textView, long waitTime, long interval, final String hint, OnSimpleListener listener)
 	{
-		textView.setEnabled(false);
-		android.os.CountDownTimer timer = new android.os.CountDownTimer(waitTime, interval)
+		String format = DataTool.getString(R.string.tool_count_down);
+		countDown(textView, waitTime, interval, format, hint, listener);
+	}
+
+	/**
+	 * 倒计时
+	 *
+	 * @param textView 控件
+	 * @param waitTime 倒计时总时长
+	 * @param interval 倒计时的间隔时间
+	 * @param format   计时器的文本格式 (如 剩下 %d 秒)
+	 * @param hint     倒计时完毕时显示的文字
+	 * @param listener 结束时调用的接口
+	 */
+	public static void countDown(final TextView textView, long waitTime, long interval, final String format, final String hint, final OnSimpleListener listener)
+	{
+		try
 		{
-
-			@SuppressLint("DefaultLocale") @Override public void onTick(long millisUntilFinished)
+			textView.setEnabled(false);
+			timer = new android.os.CountDownTimer(waitTime, interval)
 			{
-				textView.setText(String.format("剩下 %d S", millisUntilFinished/1000));
-			}
 
-			@Override public void onFinish()
-			{
-				textView.setEnabled(true);
-				textView.setText(hint);
-			}
-		};
-		timer.start();
+				@SuppressLint("DefaultLocale") @Override public void onTick(long millisUntilFinished)
+				{
+					String data = String.format(format, millisUntilFinished/1000);
+
+					if(textView != null)
+					{
+						textView.setText(data);
+					}
+				}
+
+				@Override public void onFinish()
+				{
+					if(textView != null)
+					{
+						textView.setEnabled(true);
+						textView.setText(hint);
+					}
+					if(listener != null)
+					{
+						listener.doSomething();
+					}
+				}
+			};
+			timer.start();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public static void cancelCountDown()
+	{
+		if(timer != null)
+		{
+			timer.cancel();
+			timer = null;
+		}
 	}
 
 	/**
 	 * 手动计算出listView的高度，但是不再具有滚动效果
-	 *
-	 * @param listView
 	 */
 	public static void fixListViewHeight(ListView listView)
 	{
@@ -170,46 +283,6 @@ public class Tool
 		listView.setLayoutParams(params);
 	}
 
-	//---------------------------------------------MD5加密-------------------------------------------
-
-	/**
-	 * 生成MD5加密32位字符串
-	 *
-	 * @param MStr :需要加密的字符串
-	 * @return
-	 */
-	public static String Md5(String MStr)
-	{
-		try
-		{
-			final MessageDigest mDigest = MessageDigest.getInstance("MD5");
-			mDigest.update(MStr.getBytes());
-			return bytesToHexString(mDigest.digest());
-		}
-		catch(NoSuchAlgorithmException e)
-		{
-			return String.valueOf(MStr.hashCode());
-		}
-	}
-
-	// MD5内部算法---------------不能修改!
-	private static String bytesToHexString(byte[] bytes)
-	{
-		// http://stackoverflow.com/questions/332079
-		StringBuilder sb = new StringBuilder();
-		for(int i = 0; i < bytes.length; i++)
-		{
-			String hex = Integer.toHexString(0xFF & bytes[i]);
-			if(hex.length() == 1)
-			{
-				sb.append('0');
-			}
-			sb.append(hex);
-		}
-		return sb.toString();
-	}
-	//============================================MD5加密============================================
-
 	/**
 	 * 根据资源名称获取资源 id
 	 * <p>
@@ -217,17 +290,13 @@ public class Tool
 	 * <p>
 	 * 例如
 	 * getResources().getIdentifier("ic_launcher", "drawable", getPackageName());
-	 *
-	 * @param context
-	 * @param name
-	 * @param defType
-	 * @return
 	 */
-	public final static int getResIdByName(Context context, String name, String defType)
+	public static int getResIdByName(String name, String defType)
 	{
-		return context.getResources().getIdentifier("ic_launcher", "drawable", context.getPackageName());
+		return getContext().getResources().getIdentifier(name, defType, getContext().getPackageName());
 	}
 
+	private static long lastClickTime;
 	public static boolean isFastClick(int millisecond)
 	{
 		long curClickTime = System.currentTimeMillis();
@@ -243,9 +312,7 @@ public class Tool
 	}
 
 	/**
-	 * 获取
-	 *
-	 * @return
+	 * 获取后台Handler
 	 */
 	public static Handler getBackgroundHandler()
 	{

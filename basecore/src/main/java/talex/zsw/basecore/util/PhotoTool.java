@@ -1,6 +1,5 @@
 package talex.zsw.basecore.util;
 
-import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -8,22 +7,18 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
-
-import talex.zsw.basecore.view.other.RxToast;
 
 /**
  * 相册,相机常用方法
@@ -91,8 +86,15 @@ public class PhotoTool
 
 	/**
 	 * 裁剪图片
+	 *
+	 * @param activity 调用的Activity
+	 * @param srcUri   图片的uri
+	 * @param aspectX  裁剪框宽高的比例
+	 * @param aspectY  裁剪框宽高的比例
+	 * @param outputX  裁剪后生成图片的宽高
+	 * @param outputY  裁剪后生成图片的宽高
 	 */
-	public static void cropImage(Activity activity, Uri srcUri)
+	public static void cropImage(Activity activity, Uri srcUri, int aspectX, int aspectY, int outputX, int outputY)
 	{
 		cropImageUri = createImagePathUri(activity);
 
@@ -113,11 +115,11 @@ public class PhotoTool
 		////////////////////////////////////////////////////////////////
 
 		// aspectX aspectY 是裁剪框宽高的比例
-		intent.putExtra("aspectX", 1);
-		intent.putExtra("aspectY", 1);
+		intent.putExtra("aspectX", aspectX);
+		intent.putExtra("aspectY", aspectY);
 		// outputX outputY 是裁剪后生成图片的宽高
-		intent.putExtra("outputX", 300);
-		intent.putExtra("outputY", 300);
+		intent.putExtra("outputX", outputX);
+		intent.putExtra("outputY", outputY);
 
 		// return-data为true时,会直接返回bitmap数据,但是大图裁剪时会出现问题,推荐下面为false时的方式
 		// return-data为false时,不会返回bitmap,但需要指定一个MediaStore.EXTRA_OUTPUT保存图片uri
@@ -128,9 +130,32 @@ public class PhotoTool
 	}
 
 	/**
-	 * 裁剪图片
+	 * 裁剪图片 返回200*200的图片
+	 */
+	public static void cropImage(Activity activity, Uri srcUri)
+	{
+		cropImage(activity, srcUri, 1, 1, 200, 200);
+	}
+
+	/**
+	 * 裁剪图片 返回200*200的图片
 	 */
 	public static void cropImage(Fragment fragment, Uri srcUri)
+	{
+		cropImage(fragment, srcUri, 1, 1, 200, 200);
+	}
+
+	/**
+	 * 裁剪图片
+	 *
+	 * @param fragment 调用裁剪的Fagment
+	 * @param srcUri   图片的uri
+	 * @param aspectX  裁剪框宽高的比例
+	 * @param aspectY  裁剪框宽高的比例
+	 * @param outputX  裁剪后生成图片的宽高
+	 * @param outputY  裁剪后生成图片的宽高
+	 */
+	public static void cropImage(Fragment fragment, Uri srcUri, int aspectX, int aspectY, int outputX, int outputY)
 	{
 		cropImageUri = createImagePathUri(fragment.getContext());
 
@@ -151,11 +176,11 @@ public class PhotoTool
 		////////////////////////////////////////////////////////////////
 
 		// aspectX aspectY 是裁剪框宽高的比例
-		intent.putExtra("aspectX", 1);
-		intent.putExtra("aspectY", 1);
+		intent.putExtra("aspectX", aspectX);
+		intent.putExtra("aspectY", aspectY);
 		// outputX outputY 是裁剪后生成图片的宽高
-		intent.putExtra("outputX", 300);
-		intent.putExtra("outputY", 300);
+		intent.putExtra("outputX", outputX);
+		intent.putExtra("outputY", outputY);
 
 		// return-data为true时,会直接返回bitmap数据,但是大图裁剪时会出现问题,推荐下面为false时的方式
 		// return-data为false时,不会返回bitmap,但需要指定一个MediaStore.EXTRA_OUTPUT保存图片uri
@@ -175,39 +200,39 @@ public class PhotoTool
 	{
 		final Uri[] imageFilePath = {null};
 
-		if(ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
-			PackageManager.PERMISSION_GRANTED)
-		{
-			ActivityCompat.requestPermissions((Activity) context, new String[]{
-				Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-			imageFilePath[0] = Uri.parse("");
-			RxToast.error("请先获取写入SDCard权限");
-		}
-		else
-		{
-			String status = Environment.getExternalStorageState();
-			SimpleDateFormat timeFormatter = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA);
-			long time = System.currentTimeMillis();
-			String imageName = timeFormatter.format(new Date(time));
-			// ContentValues是我们希望这条记录被创建时包含的数据信息
-			ContentValues values = new ContentValues(3);
-			values.put(MediaStore.Images.Media.DISPLAY_NAME, imageName);
-			values.put(MediaStore.Images.Media.DATE_TAKEN, time);
-			values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-
-			if(status.equals(Environment.MEDIA_MOUNTED))
-			{// 判断是否有SD卡,优先使用SD卡存储,当没有SD卡时使用手机存储
-				imageFilePath[0] = context
-					.getContentResolver()
-					.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-			}
-			else
+		PermissionHelper.requestStorage(new PermissionTool.FullCallback(){
+			@Override public void onGranted(List<String> permissionsGranted)
 			{
-				imageFilePath[0] = context
-					.getContentResolver()
-					.insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);
+				String status = Environment.getExternalStorageState();
+				SimpleDateFormat timeFormatter = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA);
+				long time = System.currentTimeMillis();
+				String imageName = timeFormatter.format(new Date(time));
+				// ContentValues是我们希望这条记录被创建时包含的数据信息
+				ContentValues values = new ContentValues(3);
+				values.put(MediaStore.Images.Media.DISPLAY_NAME, imageName);
+				values.put(MediaStore.Images.Media.DATE_TAKEN, time);
+				values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+
+				if(status.equals(Environment.MEDIA_MOUNTED))
+				{// 判断是否有SD卡,优先使用SD卡存储,当没有SD卡时使用手机存储
+					imageFilePath[0] = context
+						.getContentResolver()
+						.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+				}
+				else
+				{
+					imageFilePath[0] = context
+						.getContentResolver()
+						.insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);
+				}
 			}
-		}
+
+			@Override public void onDenied(List<String> permissionsDeniedForever, List<String> permissionsDenied)
+			{
+				imageFilePath[0] = Uri.parse("");
+				PermissionHelper.showOpenAppSettingDialog();
+			}
+		});
 
 		Log.i("", "生成的照片输出路径："+imageFilePath[0].toString());
 		return imageFilePath[0];

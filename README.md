@@ -1,71 +1,68 @@
 # BaseCore
-[![](https://img.shields.io/badge/platform-android-brightgreen.svg)](https://developer.android.com/index.html)  [![API](https://img.shields.io/badge/API-15%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=14)  [![](https://jitpack.io/v/vivitale/BaseCore.svg)](https://jitpack.io/#vivitale/BaseCore) [![Twitter](https://img.shields.io/badge/Gradle-3.0.1-brightgreen.svg)](https://github.com/vivitale/BaseCore)
+[![](https://img.shields.io/badge/platform-android-brightgreen.svg)](https://developer.android.com/index.html)  [![API](https://img.shields.io/badge/API-16%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=14)  [![](https://jitpack.io/v/vivitale/BaseCore.svg)](https://jitpack.io/#vivitale/BaseCore) [![Twitter](https://img.shields.io/badge/Gradle-3.2.1-brightgreen.svg)](https://github.com/vivitale/BaseCore)
 
 [TOC]
  
 ## 使用方法
-> 第一步 在 build.gradle(Project:XXXX) 的 repositories 添加::	allprojects {		repositories {			...			maven { url "https://jitpack.io" }		}	}> 第二步 在 build.gradle(Module:app) 的 dependencies 添加:	dependencies {	        implementation 'com.github.vivitale:BaseCore:0.0.8'	}> 第三步 使用方法,在Application中初始化:
+> 第一步 在 build.gradle(Project:XXXX) 的 repositories 添加::	allprojects {		repositories {			...			maven { url "https://jitpack.io" }		}	}> 第二步 在 build.gradle(Module:app) 的 dependencies 添加:	dependencies {	        implementation 'com.github.vivitale:BaseCore:latest.release'	}> 第三步 使用方法,在Application中初始化:
  
     Tool.init(this, BuildConfig.DEBUG);
 
-## 库介绍
+## 库
 ```
-// 已经整合进入BaseCore中的库
-api 'com.android.support:support-v4:27.1.0'
-api 'com.android.support:appcompat-v7:27.1.0'
-api 'com.android.support:design:27.1.0'
-api 'com.android.support:recyclerview-v7:27.1.0'
-api 'com.android.support:cardview-v7:27.1.0'
-api 'com.android.support:percent:27.1.0'
-api 'com.android.support.constraint:constraint-layout:1.0.2'
-// json相关
-api 'com.google.code.gson:gson:2.8.0'
-// Knife
-api 'com.jakewharton:butterknife:8.4.0'
-annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0' //Java 的butterknife注解处理器
-// Kotlin
-api "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-api "org.jetbrains.anko:anko-common:$anko_version"
-api "org.jetbrains.anko:anko-sqlite:$anko_version"
-// RxJava
-api 'io.reactivex.rxjava2:rxjava:2.1.1'
-api 'io.reactivex.rxjava2:rxandroid:2.0.1'
-api 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
-api 'com.trello.rxlifecycle2:rxlifecycle-components:2.1.0' // 包含android库和基础库
-api 'com.trello.rxlifecycle2:rxlifecycle-kotlin:2.1.0' // 支持Kotlin语法的RxLifecycle基础库
-api 'com.trello.rxlifecycle2:rxlifecycle-android-lifecycle-kotlin:2.1.0' //支持Kotlin语法的Android库
-// EventBus
-api 'org.greenrobot:eventbus:3.0.0'
-//沉浸式
-api 'com.readystatesoftware.systembartint:systembartint:1.0.3'
-// 动画
-api 'com.nineoldandroids:library:2.4.0'
+	// 已经整合进入BaseCore中的库
+	api 'com.android.support:support-v4:28.0.0'
+	api 'com.android.support:appcompat-v7:28.0.0'
+	api 'com.android.support:design:28.0.0'
+	api 'com.android.support:recyclerview-v7:28.0.0'
+	api 'com.android.support:cardview-v7:28.0.0'
+	api 'com.android.support:percent:28.0.0'
+	api 'com.android.support.constraint:constraint-layout:1.1.3'
+	// json相关
+	api 'com.google.code.gson:gson:2.8.5'
+	// Knife
+	api 'com.jakewharton:butterknife:8.8.1'
+	annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1' //Java 的butterknife注解处理器
+	// RxJava
+	api 'io.reactivex.rxjava2:rxjava:2.1.14'
+	api 'io.reactivex.rxjava2:rxandroid:2.0.2'
+	api 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+	api 'com.trello.rxlifecycle2:rxlifecycle-components:2.1.0' // 包含android库和基础库
+	api 'com.trello.rxlifecycle2:rxlifecycle-kotlin:2.1.0' // 支持Kotlin语法的RxLifecycle基础库
+	api 'com.trello.rxlifecycle2:rxlifecycle-android-lifecycle-kotlin:2.1.0' //支持Kotlin语法的Android库
+	// EventBus
+	api 'org.greenrobot:eventbus:3.1.1'
+	//沉浸式
+	api 'com.readystatesoftware.systembartint:systembartint:1.0.4'
+	// 动画
+	api 'com.nineoldandroids:library:2.4.0'
+	api 'com.github.florent37:viewanimator:1.0.5'
+	//腾讯MMKV 取代sp
+	api 'com.tencent:mmkv:1.0.11'
 
-
-// 依据项目情况需自行整合的库
-// 网络请求
-compileOnly 'com.lzy.net:okgo:3.0.4' //可以单独使用，不需要依赖下方的扩展包
-compileOnly 'com.lzy.net:okrx2:2.0.2' //RxJava扩展支持，根据需要添加
-compileOnly 'com.lzy.net:okserver:2.0.5' //版本号使用 + 可以自动引用最新版
-compileOnly 'com.squareup.okhttp3:okhttp:3.8.1'
-compileOnly 'com.squareup.okio:okio:1.13.0'
-// 动画
-compileOnly 'com.github.florent37:viewanimator:1.0.5'
-// 图片工具glide
-compileOnly 'com.github.bumptech.glide:glide:4.6.1'
-annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
-compileOnly 'com.github.bumptech.glide:okhttp3-integration:4.6.1'
-// RecyclerView适配器工具
-compileOnly 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.40'
-compileOnly 'cn.bingoogolapple:bga-baseadapter:1.2.9@aar'
-// 轮播图
-compileOnly 'cn.bingoogolapple:bga-banner:2.0.3@aar'
-// 二维码,一维码工具
-compileOnly 'cn.bingoogolapple:bga-qrcode-zxing:1.2.1'
-compileOnly 'cn.bingoogolapple:bga-qrcode-zbar:1.2.1'
-// 图片选择、预览、九宫格图片控件、拖拽排序九宫格图片控件,需要同时选择 bga-baseadapter
-compileOnly 'cn.bingoogolapple:bga-photopicker:1.2.8@aar'
+	// 依据项目情况需自行整合的库
+	// 网络请求
+	provided 'com.lzy.net:okgo:3.0.4' //可以单独使用，不需要依赖下方的扩展包
+	provided 'com.lzy.net:okrx2:2.0.2' //RxJava扩展支持，根据需要添加
+	provided 'com.lzy.net:okserver:2.0.5' //版本号使用 + 可以自动引用最新版
+	provided 'com.squareup.okhttp3:okhttp:3.8.1'
+	provided 'com.squareup.okio:okio:1.13.0'
+	// 图片工具glide
+	provided 'com.github.bumptech.glide:glide:4.7.1'
+	annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+	provided 'com.github.bumptech.glide:okhttp3-integration:4.7.1'
+	// RecyclerView适配器工具
+	provided 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.40'
+	provided 'cn.bingoogolapple:bga-baseadapter:1.2.9@aar'
+	// 轮播图
+	provided 'cn.bingoogolapple:bga-banner:2.2.4@aar'
+	// 二维码,一维码工具
+	provided 'cn.bingoogolapple:bga-qrcode-zxing:1.2.1'
+	provided 'cn.bingoogolapple:bga-qrcode-zbar:1.2.1'
+	// 图片选择、预览、九宫格图片控件、拖拽排序九宫格图片控件,需要同时选择 bga-baseadapter
+	provided 'cn.bingoogolapple:bga-photopicker:1.2.8@aar'
+	// 日历控件
+	// provided 'com.squareup:android-times-square:1.6.5@aar'
 ```
 ### 常用工具库
 库名 | 简单说明 | GitHub | 使用方法
@@ -77,9 +74,11 @@ BGABaseAdapter  | AdapterView 和 RecyclerView 中通用的 Adapter 和 ViewHold
 BGABanner  | 轮播图 |[Github](https://github.com/bingoogolapple/BGABanner-Android)  | 
 BGAQRCode  | 条码工具库 |[Github](https://github.com/bingoogolapple/BGAQRCode-Android)  | 
 BGAPhotoPicker  | 图片选择、预览等 |[Github](https://github.com/bingoogolapple/BGAPhotoPicker-Android)
+android-times-square  | 日历工具 |[Github](https://github.com/square/android-times-square)
 
 
 ## MVP框架介绍
+* [ ] TODO 编辑MVP框架使用方法
 
 ## Util
 ### ActivityTool  -> Activity相关工具
@@ -140,6 +139,8 @@ getAppInfo                  | 获取当前App信息
 getBean                     | 得到AppInfo的Bean
 getAllAppsInfo              | 获取所有已安装App信息
 isAppBackground             | 判断当前App处于前台还是后台
+relaunchApp                 | 重启APP
+
 
 ### BarTool -> 状态栏相关
 方法名 | 说明
@@ -174,6 +175,7 @@ drawable2Bytes              | drawable转byteArr
 bytes2Drawable              | byteArr转drawable
 bitmap2Base64               | Bitmap转Base64
 base642Bitmap               | Base64转Bitmap
+view2Bitmap                 | View 转 Bitmap
 **图片处理**|
 getBitmap                   | 获取bitmap
 scale                       | 缩放图片
@@ -213,6 +215,17 @@ getBitmapByUrl              | 下载图片
 calculateInSampleSize       | 计算采样大小
 isImage                     | 根据文件名判断文件是否为图片
 getImageType                | 获取图片类型
+
+
+### BrightnessTool -> 亮度相关工具类
+方法名 | 说明
+--------- | -------------
+isAutoBrightnessEnabled     | 判断是否开启自动调节亮度
+setAutoBrightnessEnabled    | 设置是否开启自动调节亮度
+getBrightness               | 获取屏幕亮度
+setBrightness               | 设置屏幕亮度
+setWindowBrightness         | 设置窗口亮度
+getWindowBrightness         | 获取窗口亮度
 
 
 ### BroadcastTool -> 广播工具
@@ -335,6 +348,7 @@ int2Bytes                   | byte[] 转 int
 hex2Dec                     | hexChar 转 int
 chars2Bytes                 | charArr 转 byteArr
 bytes2Chars                 | byteArr 转 charArr
+resId2Uri                   | 资源id 转 Uri
 byte2Size                   | 字节数 转 以unit为单位的size
 size2Byte                   | 以unit为单位的size 转 字节数
 byte2FitSize                | 字节数 转 合适大小
@@ -371,6 +385,7 @@ getPercentValue             | 获取百分比  new BigDecimal(0.21) - 21%
 intsGetSum                  | 整型数组求和
 getRoundUp                  | 四舍五入
 getNotNull                  | 若输入为null，则返回空字符串；否则返回字符串自身
+getOrDefault                | 如果为空则返回默认值
 stringToString              | 字符串的转义(处理特殊字符)
 deleteBlank                 | 去除字符串中的空格，回车制表 符等。。。\t \r \n
 deleteHTMLTag               | 去除String中的HTML标签
@@ -436,6 +451,9 @@ getIpAddress                | 获取本机的ip地址（上面3种方法都包�
 getAppInfo                  | 获取包信息
 getAppVersionNo             | 获取App版本号
 getAppVersionName           | 获取App版本名称
+reboot                      | 重启
+reboot2Recovery             | 重启到 recovery
+reboot2Bootloader           | 重启到 bootloader
 **手机操作相关**|
 isPhone                     | 判断设备是否是手机
 getPhoneStatus              | 获取手机状态信息
@@ -755,6 +773,7 @@ getCallIntent               | 打电话的意图
 getSendSmsIntent            | 发送短信的意图
 getCaptureIntent            | 调用系统相机的意图
 getOpenCameraIntent         | 获取打开照程序界面的Intent
+getWebIntent                | 获取打开网页的意图
 getImagePickerIntent        | 获取[跳转至相册选择界面,并跳转至裁剪界面，可以指定是否缩放裁剪区域]的Intent
 getCameraIntent             | 获取[跳转至相册选择界面,并跳转至裁剪界面，默认可缩放裁剪区域]的Intent
 getCropImageIntent          | 获取[跳转至裁剪界面]的Intent
@@ -781,6 +800,10 @@ showSoftInput               | 动态显示软键盘
 toggleSoftInput             | 切换键盘显示与否状态
 clickBlankArea2HideSoftInput| 点击屏幕空白区域隐藏软键盘（方法1）
 clickBlankArea2HideSoftInput1| 点击屏幕空白区域隐藏软键盘（方法2）
+isSoftInputVisible          | 判断软键盘是否可见
+registerSoftInputChangedListener  | 注册软键盘改变监听器
+unregisterSoftInputChangedListener| 注销软键盘改变监听器
+fixSoftInputLeaks           | 修复软键盘内存泄漏
 
 
 ### LocationTool -> 定位相关工具
@@ -867,6 +890,15 @@ div                         | 除 返回double
 round                       | 小数位四舍五入 返回double
 roundStr                    | 小数位四舍五入 返回String
 
+### NetTool -> 不断的ping网址,返回延迟
+方法名 | 说明
+--------- | -------------
+NetPingTool                 | 初始化方法,传入网址,端口和回调方法
+startGetDelay               | 开始监听
+release                     | 释放
+setmDomain                  | 设置网址
+setmPort                    | 设置端口号
+setDuration                 | 设置延迟,多久发送一次ping
 
 ### NetTool -> 网络工具
 方法名 | 说明
@@ -900,10 +932,73 @@ clearNotification           | 取消指定id的消息
 ### PermissionsTool -> 权限工具
 方法名 | 说明
 --------- | -------------
-addPermission               | 添加权限
-initPermission              | 请求权限
-checkPermission             | 检查权限是否获取
+getPermissions              | 获取程序中使用的权限列表
+isGranted                   | 返回某些权限是否已经获取
+```
+PermissionTool
+    .permission(PermissionConstants.PHONE, PermissionConstants.STORAGE)
+    .rationale(new PermissionTool.OnRationaleListener()
+    {
+        @Override public void rationale(final ShouldRequest shouldRequest)
+        {
+            PermissionHelper.showRationaleDialog(shouldRequest);
+        }
+    })
+    .callback(new PermissionTool.FullCallback()
+    {
+        @Override public void onGranted(List<String> permissionsGranted)
+        {
+        }
+        @Override public void onDenied(List<String> permissionsDeniedForever, List<String> permissionsDenied)
+        {
+            if(!permissionsDeniedForever.isEmpty())
+            {
+                PermissionHelper.showOpenAppSettingDialog();
+            }
+        }
+    })
+    .theme(new PermissionTool.ThemeCallback()
+    {
+        @Override public void onActivityCreate(Activity activity)
+        {
+            PermissionHelper.setFullScreen(activity);
+        }
+    })
+    .request();
+```
 
+### PermissionsHelper -> 权限简易获取辅助类
+方法名 | 说明
+--------- | -------------
+requestCamera               | 获取相机权限
+requestStorage              | 获取内存卡权限
+requestPhone                | 获取电话权限
+requestSms                  | 获取短信权限
+requestLocation             | 获取地理位置权限
+requestCalendar             | 获取日历权限
+requestContacts             | 获取联系人权限
+requestMicrophone           | 获取麦克风权限
+requestSensors              | 获取人体传感器权限
+request                     | 获取权限
+showOpenAppSettingDialog    | 显示一个打开APP设置来获取权限的Dialog
+showRationaleDialog         | 显示一个获取权限的提示
+launchAppDetailsSettings    | 打开App的设置界面
+setFullScreen               | activity设置全屏
+```
+PermissionHelper.requestStorage(new PermissionTool.FullCallback()
+{
+    @Override public void onGranted(List<String> permissionsGranted)
+    {   
+    }
+    @Override public void onDenied(List<String> permissionsDeniedForever, List<String> permissionsDenied)
+    {
+        if(!permissionsDeniedForever.isEmpty())
+        {
+            PermissionHelper.showOpenAppSettingDialog();
+        }
+    }
+});
+```
 
 ### PhotoTool -> 进程相关
 方法名 | 说明
@@ -930,6 +1025,8 @@ killBackgroundProcesses     | 杀死后台服务进程
 --------- | -------------
 isNullString                | 判断字符串是否为空 为空即true
 isEmpty                     | 判断对象是否为空 为空即true
+isNotEmpty                  | 判断对象是否不为空
+isEquals                    | 是否相同
 isInteger                   | 判断字符串是否是整数
 isDouble                    | 判断字符串是否是浮点数
 isNumber                    | 判断字符串是否是数字
@@ -954,7 +1051,8 @@ stringFormat                | String.Format方法的封装
 ### ServiceTool -> 服务工具 
 方法名 | 说明
 --------- | -------------
-isRunningService            | 获取服务是否开启
+isServiceRunning            | 获取服务是否开启
+getAllRunningServices       | 获取所有运行中的服务
 
 
 ### ShellTool -> Shell命令关 
@@ -969,6 +1067,27 @@ execCmd                     | 执行命令
 --------- | -------------
 create                      | 播放语音文件
 dismisSoundPool             | 释放播放池
+
+### SpTool -> SharedPreferences工具 
+方法名 | 说明
+--------- | -------------
+init                        | 初始化
+getString                   | 获取String
+saveString                  | 保存String
+getObject                   | 获取Object
+saveObject                  | 保存Object
+getBoolean                  | 获取boolean
+saveBoolean                 | 保存boolean
+getInt                      | 获取int
+saveInt                     | 保存int
+getLong                     | 获取long
+saveLong                    | 保存long
+getFloat                    | 获取float
+saveFloat                   | 保存float
+getAll                      | 获取所有的键值对
+contains                    | 是否包含某key
+remove                      | 移除
+clear                       | 清除所有数据
 
 
 ### TextTool -> 文本工具
@@ -1070,6 +1189,19 @@ setWebData                  | 简单震动一次
 
 ## View
 
+### CheckBox
+#### AnimateCheckBox -> 一个带有动画效果的CheckBox
+原项目地址:[https://github.com/hanks-zyh/AnimateCheckBox](https://github.com/hanks-zyh/AnimateCheckBox)
+
+方法名 | 说明
+--------- | -------------
+setCircleColor              | 设置圆的颜色
+setLineColor                | 设置对号的颜色
+setUnCheckColor             | 设置未选中时的颜色
+setOnCheckedChangeListener  | 设置状态改变监听
+isChecked                   | 返回当前选中状态
+setChecked                  | 设置当前选中状态
+
 ### Dialog
 #### SweetAlertDialog -> 几种Dialog直接的切换显示
 原项目地址:[https://github.com/pedant/sweet-alert-dialog](https://github.com/pedant/sweet-alert-dialog)
@@ -1082,6 +1214,102 @@ public static final int CUSTOM_IMAGE_TYPE = 4;    // 显示图片
 public static final int PROGRESS_TYPE = 5;        // 显示圆形进度条
 ```
 
+#### RxDialogChooseImage -> 用来显示选择获取图片方式的Dialog
+```
+RxDialogChooseImage dialogChooseImage = new RxDialogChooseImage(mContext, TITLE);
+dialogChooseImage.show();
+
+
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+{
+    when (requestCode)
+    {
+        PhotoTool.GET_IMAGE_FROM_PHONE ->
+        { //选择相册之后的处理
+            if (resultCode == RESULT_OK)
+            {
+                PhotoTool.cropImage(this@VerifyActivity, data?.data, 16, 11, 320, 220) // 裁剪图片
+            }
+        }
+        PhotoTool.GET_IMAGE_BY_CAMERA  ->
+        { //选择相册之后的处理
+            if (resultCode == RESULT_OK)
+            {
+                PhotoTool.cropImage(this@VerifyActivity, PhotoTool.imageUriFromCamera, 16, 11, 320, 220) // 裁剪图片
+            }
+        }
+        PhotoTool.CROP_IMAGE           ->
+        {
+            Glide.with(this@VerifyActivity)
+                    .load(PhotoTool.cropImageUri)
+                    .into(mIvPicture)
+        }
+    }
+    super.onActivityResult(requestCode, resultCode, data)
+}
+```
+
+
+#### RxDialogEditSureCancel -> 带有确认取消按钮的 输入框Dialog
+```
+final RxDialogEditSureCancel rxDialogEditSureCancel = new RxDialogEditSureCancel(mContext);//提示弹窗
+rxDialogEditSureCancel.getTitleView().setBackgroundResource(R.drawable.logo);
+rxDialogEditSureCancel.getSureView().setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        rxDialogEditSureCancel.cancel();
+    }
+});
+rxDialogEditSureCancel.getCancelView().setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        rxDialogEditSureCancel.cancel();
+    }
+});
+rxDialogEditSureCancel.show();
+```
+
+
+#### RxDialogScaleView -> 查看图片并支持手势缩放
+```
+RxDialogScaleView rxDialogScaleView = new RxDialogScaleView(mContext);
+rxDialogScaleView.setImage(...);
+rxDialogScaleView.show();
+```
+
+#### RxDialogSure -> 有确定按钮的弹出框,显示基础信息
+```
+RxDialogSure rxDialogSure = new RxDialogSure(mContext);
+rxDialogSure.getLogoView().setImageResource(R.drawable.logo);
+rxDialogSure.getSureView().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        rxDialogSure.cancel();
+                    }
+                });
+rxDialogSure.show();
+```
+
+#### RxDialogSureCancel -> 有确定,取消 按钮的弹出框,显示基础信息
+```
+RxDialogSureCancel rxDialogSureCancel = new RxDialogSureCancel(mContext);
+rxDialogSureCancel.getTitleView().setBackgroundResource(R.drawable.logo);
+rxDialogSureCancel.getSureView().setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        rxDialogSureCancel.cancel();
+    }
+});
+rxDialogSureCancel.getCancelView().setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        rxDialogSureCancel.cancel();
+    }
+});
+rxDialogSureCancel.show();
+```
+
+
 ### EditText
 #### ClearEditText -> 带清理功能的EditText 
 方法名 | 说明
@@ -1090,11 +1318,21 @@ shake                       | 抖动
 setAfterChangedListener     | 设置文字变化以后的事件
 
 ### ImageView
+#### DynamicHeightImageView -> 可设置宽高比的图片
+方法名 | 说明
+--------- | -------------
+setHeightRatio              | 设置ImageView的宽高尺寸比例
+getHeightRatio              | 获取设置的宽高比例
+
+
 #### GifView -> 显示Gif图片
 方法名 | 说明
 --------- | -------------
 setMovieResource            | 设置gif的id
 
+
+#### ScaleImageView -> 显示一个支持手势缩放的ImageView
+原项目地址:[https://github.com/davemorrissey/subsampling-scale-image-view](https://github.com/davemorrissey/subsampling-scale-image-view)
 
 ### PopupWindow
 #### MyPopupWindow  -> 可以监听显示,消失事件的POP
@@ -1142,12 +1380,32 @@ FullyStaggeredGridLayoutManager| 使RecyclerView使用瀑布流嵌套在ScrollVi
 SampleFooter                | 简单实现的没有更多底部栏
 SampleHeader                | 简单实现的没有数据栏
 
+#### MarqueeRecyclerView -> 自动跑马灯的RecyclerView
+#### MyGridView -> 计算高度为全部item的GridView
+#### MyListView -> 计算高度为全部item的ListView
 
 ### TextView
+#### Anticlockwise -> 倒计时器
+方法名 | 说明
+--------- | -------------
+initTime                    | 初始化时间 秒
+reStart                     | 重新启动计时 秒
+onPause                     | 暂停计时
+onResume                    | 继续计时
+setTimeFormat               | 设置时间格式
+setOnTimeCompleteListener   | 计时结束时的事件
+
+
 #### AutofitTextView -> 自适应文字大小的TextView
 原项目地址:[https://github.com/grantland/android-autofittextview](https://github.com/grantland/android-autofittextview)
 
 自动修改文字大小以适应View的宽度
+
+
+#### MyDigitalClock -> 时钟控件,以自定义格式显示当前时间
+方法名 | 说明
+--------- | -------------
+setFormat                   | 设置时间格式
 
 
 #### RichText  -> Android平台下的富文本解析器
@@ -1160,6 +1418,141 @@ setRichText                 | 设置富文本内容
 setPlaceHolder              | 设置站位图片
 setErrorImage               | 设置错误图片
 setOnImageClickListener     | 设置图片点击事件
+
+#### RunTextView  -> 无限自动跑马灯
+
+#### RxTextViewVertical  -> 无限向上自动翻滚的TextView
+```
+ArrayList<String> titleList = new ArrayList<String>();
+titleList.add("测试轮播消息1");
+...
+mRxTextViewVertical.setTextList(titleList);
+mRxTextViewVertical.setText(26, 5, 0xff766156);//设置属性
+mRxTextViewVertical.setTextStillTime(3000);//设置停留时长间隔
+mRxTextViewVertical.setAnimTime(300);//设置进入和退出的时间间隔
+mRxTextViewVertical.setOnItemClickListener(new RxTextViewVertical.OnItemClickListener() {
+    @Override
+    public void onItemClick(int position) {
+        RxToast.success(mContext, "点击了 : " + titleList.get(position), Toast.LENGTH_SHORT, true).show();
+    }
+});
+```
+
+#### RxTextViewVerticalMore  -> 无限向上自动翻滚的自定义View
+```
+List<View> views = new ArrayList<>();
+viewsviews.add(VIEW);
+...
+mRxTextViewVerticalMore.setViews(views);
+```
+
+#### StateButton  -> 省去为Button写drawable的麻烦
+原项目地址:[https://github.com/niniloveyou/StateButton](https://github.com/niniloveyou/StateButton)
+
+Customizable attributes
+-----------------------
+
+|        Attribute       |      default value     |           xml            |                 java                |
+|------------------------|------------------------|--------------------------|-------------------------------------|
+| normalTextColor        |   original text color  | normalTextColor          | setNormalTextColor(int color)       |
+| pressedTextColor       |   original text color  | pressedTextColor          | setPressedTextColor(int color)       |
+| unableTextColor        |   original text color  | unableTextColor          | setUnableTextColor(int color)       |
+| strokeDashWidth        |   0  | strokeDashWidth          | setStrokeDash(int dashWidth, int dashGap)       |
+| strokeDashGap        |   0  | strokeDashGap          | setStrokeDash(int dashWidth, int dashGap)      |
+| normalStrokeWidth        |   0  | normalStrokeWidth          | setNormalStrokeWidth(int widht)       |
+| pressedStrokeWidth        |   0  | pressedStrokeWidth          | setPressedStrokeWidth(int widht)        |
+| unableStrokeWidth        |   0  | unableStrokeWidth          | setUnableStrokeWidth(int widht)        |
+| normalStrokeColor        |   0  | normalStrokeColor          | setNormalStrokeColor(int color)       |
+| pressedStrokeColor        |   0  | pressedStrokeColor          | setPressedStrokeColor(int color)       |
+| unableStrokeColor        |   0  | unableStrokeColor          | setUnableStrokeColor(int color)       |
+| normalBackgroundColor        |   0  | normalBackgroundColor          | setNormalBackgroundColor(int color)       |
+| pressedBackgroundColor        |   0  | pressedBackgroundColor   | setPressedBackgroundColor(int color)       |
+| unableBackgroundColor        |   0  | unableBackgroundColor          | setUnableBackgroundColor(int color)       |
+| radius        |   0  | radius          | setRadius(int radius) / setRadius(float[] radii)      |
+| round        |  false  | round          | setRound(boolean round)       |
+| animationDuration        |   0ms  | animationDuration          | setAnimationDuration(int duration)       |
+
+
+xml中定义了以下属性
+-  Define `xmlns:app="http://schemas.android.com/apk/res-auto"` on root of your xml file
+
+```
+<talex.zsw.basecore.view.textview.StateButton
+            android:id="@+id/stateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="StateButton"
+            
+            app:radius="5dp"
+            app:round="true"
+            app:animationDuration="200"
+            
+            app:strokeDashGap="2dp"
+            app:strokeDashWidth="5dp"
+            app:normalStrokeWidth="2dp"
+            app:pressedStrokeWidth="2dp"
+            app:unableStrokeWidth="2dp"
+            
+            app:normalStrokeColor="@android:color/white"
+            app:pressedStrokeColor="@android:color/white"
+            app:unableStrokeColor="@android:color/white"
+            
+            app:normalTextColor="@android:color/white"
+            app:pressedTextColor="@android:color/white"
+            app:unableTextColor="@android:color/white"
+            
+            app:normalBackgroundColor="@color/colorPrimaryDark"
+            app:pressedBackgroundColor="@color/colorPrimaryDark"
+            app:unableBackgroundColor="@color/colorPrimaryDark"/>
+```
+
+#### TimeSinceTextView -> 根据当前系统时间,设置某个时间的表达
+```
+    <string name="timespan_now">刚刚</string>
+    <plurals name="timespan_years">
+        <item quantity="other">%d年前</item>
+    </plurals>
+    <plurals name="timespan_months">
+        <item quantity="other">%d个月前</item>
+    </plurals>
+    <plurals name="timespan_weeks">
+        <item quantity="other">%d周前</item>
+    </plurals>
+    <plurals name="timespan_days">
+        <item quantity="other">%d天前</item>
+    </plurals>
+    <plurals name="timespan_hours">
+        <item quantity="other">%d小时前</item>
+    </plurals>
+    <plurals name="timespan_minutes">
+        <item quantity="other">%d分钟前</item>
+    </plurals>
+    <plurals name="timespan_seconds">
+        <item quantity="other">%d秒前</item>
+    </plurals>
+    <plurals name="timespan_years_abbr">
+        <item quantity="other">%d年</item>
+    </plurals>
+    <plurals name="timespan_months_abbr">
+        <item quantity="other">%d月</item>
+    </plurals>
+    <plurals name="timespan_weeks_abbr">
+        <item quantity="other">%d周</item>
+    </plurals>
+    <plurals name="timespan_days_abbr">
+        <item quantity="other">%d天</item>
+    </plurals>
+    <plurals name="timespan_hours_abbr">
+        <item quantity="other">%d小时</item>
+    </plurals>
+    <plurals name="timespan_minutes_abbr">
+        <item quantity="other">%d分钟</item>
+    </plurals>
+    <plurals name="timespan_seconds_abbr">
+        <item quantity="other">%d秒</item>
+    </plurals>
+```
 
 ### ViewPager
 #### CustomViewPager -> 自动适应高度的ViewPager
@@ -1214,6 +1607,135 @@ setObjectForPosition        | 设置ViewPsger的存放的View和对应的positio
 高度会自行计算的WebView
 
 ### Other
+#### BGABadge -> Badge控件
+原项目地址:[https://github.com/bingoogolapple/BGABadgeView-Android](https://github.com/bingoogolapple/BGABadgeView-Android)
+
+该项目的老版本控件,不需使用注入的方式,直接调用对应的控件即可
+BGABadgeView
+BGADragBadgeView
+BGABadgeTextView
+BGABadgeImageView
+BGABadgeRadioButton
+BGABadgeFrameLayout
+BGABadgeLinearLayout
+BGABadgeRelativeLayout
+
+
+方法名 | 说明
+--------- | -------------
+showCirclePointBadge        | 显示圆点徽章
+showTextBadge               | 显示文字徽章
+hiddenBadge                 | 隐藏徽章
+showDrawableBadge           | 显示图像徽章
+setDragDismissDelegage      | 设置拖动删除徽章的代理
+isShowBadge                 | 是否正在显示徽章
+isDraggable                 | 是否可拖拽
+isDragging                  | 是否正在拖动
+
+属性名 | 说明 | 默认值
+----------- | ----------- | -----------
+badge_bgColor         | 徽章背景色        | Color.RED
+badge_textColor         | 徽章文本的颜色        | Color.WHITE
+badge_textSize         | 徽章文本字体大小        | 10sp
+badge_verticalMargin         | 徽章背景与宿主控件上下边缘间距离        | 4dp
+badge_horizontalMargin         | 徽章背景与宿主控件左右边缘间距离        | 4dp
+badge_padding         | 徽章文本边缘与徽章背景边缘间的距离        | 4dp
+badge_gravity         | 徽章在宿主控件中的位置        | BGABadgeImageView和BGABadgeRadioButton是右上方，其他控件是右边垂直居中
+badge_draggable         | 是否开启拖拽删除徽章        | false
+badge_isResumeTravel         | 拖拽徽章超出轨迹范围后，再次放回到轨迹范围时，是否恢复轨迹        | false
+badge_borderWidth         | 徽章描边宽度        | 0dp
+badge_borderColor         | 徽章描边颜色        | Color.WHITE
+badge_dragExtra         | 触发开始拖拽徽章事件的扩展触摸距离        | 4dp
+
+#### DropDownMenu  -> 下拉菜单
+原项目地址:[https://github.com/dongjunkun/DropDownMenu](https://github.com/dongjunkun/DropDownMenu)
+
+相比原项目增加了更多可自定义项目,使用方法基本一致
+
+#### FlowLayout -> Android流式布局，支持单选、多选等
+原项目地址:[https://github.com/hongyangAndroid/FlowLayout](https://github.com/hongyangAndroid/FlowLayout)
+
+```
+<talex.zsw.basecore.view.other.flowlayout.TagFlowLayout
+    android:id="@+id/mFlowLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:FL_max_select="1"/>
+
+// 设置适配器
+mFlowLayout.setAdapter(new TagAdapter<String>(mVals)
+   {
+       @Override
+       public View getView(FlowLayout parent, int position, String s)
+       {
+           TextView tv = (TextView) mInflater.inflate(R.layout.tv,
+                   mFlowLayout, false);
+           tv.setText(s);
+           return tv;
+       }
+   });
+   
+// 点击事件
+mFlowLayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener()
+{
+  @Override
+  public boolean onTagClick(View view, int position, FlowLayout parent)
+  {
+      Toast.makeText(getActivity(), mVals[position], Toast.LENGTH_SHORT).show();
+      return true;
+  }
+});
+
+// Tag选中的回调事件
+mFlowLayout.setOnSelectListener(new TagFlowLayout.OnSelectListener()
+{
+  @Override
+  public void onSelected(Set<Integer> selectPosSet)
+  {
+      getActivity().setTitle("choose:" + selectPosSet.toString());
+  }
+});
+
+mFlowLayout.setMaxSelectCount(1)// 设置最大选中数量
+flowAdapter?.setSelectedList(1)// 设置选中的列表
+```
+
+属性名 | 说明 | 默认值
+----------- | ----------- | -----------
+FL_max_select | -1为不限制选择数量，>=1的数字为控制选择tag的数量 | -1
+
+
+### IconText -> 带有TextView上方组合一个ImageView
+属性 | 说明
+--------- | -------------
+android:text                | 设置TextView文本
+android:textSize            | 设置TextView文字大小
+IT_text_selected_color      | 设置TextView选中时的颜色
+IT_text_unselected_color    | 设置TextView未选中时的颜色
+IT_icon_selected            | 设置ImageView选中时的图片
+IT_icon_unselected          | 设置ImageView未选中的图片
+IT_icon_width               | 设置ImageView的宽度
+IT_icon_height              | 设置ImageView的高度
+IT_icon_wrap                | 设置ImageView的高度是否自适应,默认true
+IT_selected_background      | 设置选中时的背景色
+IT_unselected_background    | 设置未选中时的背景色
+IT_padding                  | 设置控件上下的padding
+IT_match                    | 设置控件的高度是否充满,默认false
+IT_badge_text               | 设置badge的文本
+IT_badge_text_show          | 设置badge的文本是否显示
+IT_badge_icon_show          | 设置badge的icon是否显示
+IT_selected                 | 设置控件是否为选中状态
+
+#### NiceSpinner -> 简单的Spinner的实现
+原项目地址:[https://github.com/arcadefire/nice-spinner](https://github.com/arcadefire/nice-spinner)
+
+```
+ NiceSpinner niceSpinner = (NiceSpinner) findViewById(R.id.nice_spinner);
+ List<String> dataset = new LinkedList<>(Arrays.asList("One", "Two", "Three", "Four", "Five"));
+ niceSpinner.attachDataSource(dataset);
+```
+
+
 #### PageControlView  -> 底部小圆圈
 方法名 | 说明
 --------- | -------------
@@ -1239,6 +1761,35 @@ showToastShort              | 显示系统toast(短)
 showToastLong               | 显示系统toast(短)
 doubleClickExit             | 点击两次退出
 
+
+#### SlideDateTimePicker  -> 日期时间滚轮选择
+原项目地址:[https://github.com/jjobes/SlideDateTimePicker](https://github.com/jjobes/SlideDateTimePicker)
+
+相比原项目,增加了一些新的设置选项,优化了项目布局
+
+```
+SlideDateTimeListener startListener = new SlideDateTimeListener(){
+    @Override public void onDateTimeSet(Date date)
+    {
+        
+    }
+};
+// Fragment中则使用getChildFragmentManager()
+new SlideDateTimePicker.Builder(getSupportFragmentManager())
+        .setListener(startListener)
+        .setInitialDate(startDate)
+        .setMinDate(minDate)
+        .setMaxDate(maxDate)
+        .setIndicatorColor(Color.parseColor("#990000"))
+        .setShowTime(false)
+        .setThemeColor(Color.parseColor("#FFFF00"))
+        .setTitleColor(Color.parseColor("#FF0000"))
+        .build()
+        .show()
+```
+
+
+#### SquareLayout -> 保持宽高比一致的布局 
 
 #### SwipeToLoadLayout -> 上拉刷新,下拉加载
 原项目地址:[https://github.com/Aspsine/SwipeToLoadLayout](https://github.com/Aspsine/SwipeToLoadLayout)
@@ -1298,6 +1849,150 @@ doubleClickExit             | 点击两次退出
     layout_google_hook_footer
     layout_google_footer
 
+## Service & Receiver
+### 开机启动服务 -> 该功能需要手动设置开机启动才会生效
+1.在清单文件中添加开机启动的服务和广播
+
+```
+<!-- 开机启动 -->
+<service
+    android:name="talex.zsw.basecore.service.BootService">
+</service>
+
+<receiver android:name="talex.zsw.basecore.receiver.BootReceiver">
+    <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+    </intent-filter>
+</receiver>
+```
+2.在清单文件中添加开机启动的权限
+
+```
+<!--开机启动服务-->
+<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+```
+3.在MyApplication中接收开机启动的事件
+
+```
+@Subscribe public void onEvent(BootEvent event)
+{
+}
+```
+
+### LocationService -> 地理位置相关的服务
+1.在清单文件中添加获取地理位置的服务
+
+```
+<!-- 地理位置 -->
+<service
+    android:name="talex.zsw.basecore.service.LocationService">
+</service>
+```
+2.代码中启动服务
+
+```
+private boolean isBind = false;
+private LocationService mLocationService = null;
+private ServiceConnection mLocationServiceConnection = new ServiceConnection(){
+    @Override public void onServiceConnected(ComponentName name, IBinder service)
+    {
+        isBind = true;
+        mLocationService = ((LocationService.LocationBinder)service).getService();
+        mLocationService.setOnGetLocationListener(new LocationService.OnGetLocationListener(){
+            @Override
+            public void getLocation(String lastLatitude, String lastLongitude, String latitude, String longitude, String country, String locality, String street)
+            {
+                runOnUiThread(new Runnable(){
+                    @Override public void run()
+                    {
+                        
+                    }
+                });
+            }
+        });
+    }
+
+    @Override public void onServiceDisconnected(ComponentName name)
+    {
+        mLocationService = null;
+    }
+};
+
+private void bindService()
+{
+    PermissionHelper.requestLocation(new PermissionTool.FullCallback()
+    {
+        @Override public void onGranted(List<String> permissionsGranted)
+        {
+            Intent intent = new Intent(BaseMVPActivity.this, LocationService.class);
+            bindService(intent, mLocationServiceConnection, Context.BIND_AUTO_CREATE);
+        }
+
+        @Override public void onDenied(List<String> permissionsDeniedForever, List<String> permissionsDenied)
+        {
+            PermissionHelper.showOpenAppSettingDialog();
+        }
+    });
+}
+
+private void unBindService()
+{
+    isBind = false;
+    unbindService(mLocationServiceConnection);
+}
+```
+### PingService -> ping服务器获取网络延迟
+1.在清单文件中添加获取地理位置的服务
+
+```
+<!-- ping服务器 -->
+<service
+    android:name="talex.zsw.basecore.service.PingService">
+</service>
+```
+2.代码中启动服务
+```
+private PingService mPingService;
+
+private ServiceConnection mPingServiceConnection = new ServiceConnection()
+{
+    @Override public void onServiceConnected(ComponentName name, IBinder service)
+    {
+        LogTool.nv("onServiceConnected");
+        mPingService = ((PingService.PingBinder) service).getService();
+        mPingService.startPing("www.baidu.com", new NetPingTool.IOnNetPingListener()
+        {
+            @Override public void ontDelay(long log)
+            {
+                LogTool.ni("延迟 "+log+" ms");
+            }
+
+            @Override public void onError()
+            {
+                LogTool.ne("错误，网络不通");
+            }
+        });
+    }
+
+    @Override public void onServiceDisconnected(ComponentName name)
+    {
+        LogTool.nv("onServiceDisconnected");
+        mPingService = null;
+    }
+};
+
+private void bindPingService()
+{
+    LogTool.nv("bindPingService");
+    Intent intent = new Intent(this, PingService.class);
+    bindService(intent, mPingServiceConnection, Context.BIND_AUTO_CREATE);
+}
+
+private void unBindPingService()
+{
+    unbindService(mPingServiceConnection);
+i}
+```
 
 ![未完待续](https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1527567486795&di=19907f5d73242150201c8779411e5b61&imgtype=0&src=http%3A%2F%2Fcdnq.duitang.com%2Fuploads%2Fitem%2F201501%2F10%2F20150110163418_h4JFG.thumb.700_0.jpeg)
 
@@ -1326,4 +2021,17 @@ https://github.com/grantland/android-autofittextview
 
 https://github.com/bingoogolapple
 
+https://github.com/dongjunkun/DropDownMenu
+
+https://github.com/jjobes/SlideDateTimePicker
+
+https://github.com/davemorrissey/subsampling-scale-image-view
+
+https://github.com/hanks-zyh/AnimateCheckBox
+
+https://github.com/square/android-times-square
+
+https://github.com/hongyangAndroid/FlowLayout
+
+https://github.com/arcadefire/nice-spinner
 

@@ -1,0 +1,100 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+	<!-- Tool -->
+	<string name="permission_rationale_message">You have rejected us to apply for authorization, please agree to authorization, otherwise the function can\'t be used normally!</string>
+	<string name="permission_denied_forever_message">We need some of the permissions you rejected or the system failed to apply failed, please manually set to the page authorize, otherwise the function can\'t be used normally!</string>
+	<string name="nettool_change_to_wifi">Switch to wifi</string>
+	<string name="nettool_change_to_2G">Switch to 2G</string>
+	<string name="nettool_change_to_3G">Switch to 3G</string>
+	<string name="nettool_change_to_4G">Switch to 4G</string>
+	<string name="nettool_change_to_5G">Switch to 5G</string>
+	<string name="nettool_unknow">Unknown network</string>
+	<string name="nettool_no_network">No Internet connection</string>
+	<string name="tool_count_down">%d seconds remaining</string>
+	<string name="tool_double_exit">Click again to exit</string>
+
+	<!-- SwipeToLoadLayout -->
+	<string name="stll_loosen_load_more">Loosen to load more …</string>
+	<string name="stll_pull_up_load_more">Up to load more …</string>
+	<string name="stll_load_more">Load more</string>
+	<string name="stll_loading">Loading …</string>
+	<string name="stll_loose_refresh">Loosen to refresh</string>
+	<string name="stll_pull_refresh">Pull to refresh</string>
+
+	<!--SweetAlertDialog-->
+	<string name="sd_dialog_default_title">title</string>
+	<string name="sd_dialog_ok">ok</string>
+	<string name="sd_dialog_cancel">cancel</string>
+	<string name="sd_loading">loading …</string>
+
+	<!--Crash-->
+	<string name="customactivityoncrash_error_activity_error_occurred_explanation">An unexpected error occurred.\nSorry to inconvenience you.</string>
+	<string name="customactivityoncrash_error_activity_restart_app">Restart</string>
+	<string name="customactivityoncrash_error_activity_close_app">Close</string>
+	<string name="customactivityoncrash_error_activity_error_details">The error log</string>
+	<string name="customactivityoncrash_error_activity_error_details_title">Error details</string>
+	<string name="customactivityoncrash_error_activity_error_details_close">Close</string>
+	<string name="customactivityoncrash_error_activity_error_details_copy">Copy</string>
+	<string name="customactivityoncrash_error_activity_error_details_copied">Copy log</string>
+	<string name="customactivityoncrash_error_activity_error_details_clipboard_label">The error message</string>
+
+	<!-- TimeSinceTextView -->
+	<string name="timespan_now">just now</string>
+	<plurals name="timespan_years"
+	         tools:ignore="MissingQuantity">
+		<item quantity="other">%d years ago</item>
+	</plurals>
+	<plurals name="timespan_months"
+	         tools:ignore="MissingQuantity">
+		<item quantity="other">%d months ago</item>
+	</plurals>
+	<plurals name="timespan_weeks"
+	         tools:ignore="MissingQuantity">
+		<item quantity="other">%d weeks ago</item>
+	</plurals>
+	<plurals name="timespan_days"
+	         tools:ignore="MissingQuantity">
+		<item quantity="other">%d days ago</item>
+	</plurals>
+	<plurals name="timespan_hours"
+	         tools:ignore="MissingQuantity">
+		<item quantity="other">%d hours ago</item>
+	</plurals>
+	<plurals name="timespan_minutes"
+	         tools:ignore="MissingQuantity">
+		<item quantity="other">%d minutes ago</item>
+	</plurals>
+	<plurals name="timespan_seconds"
+	         tools:ignore="MissingQuantity">
+		<item quantity="other">%d seconds ago</item>
+	</plurals>
+	<plurals name="timespan_years_abbr"
+	         tools:ignore="MissingQuantity">
+		<item quantity="other">%d years</item>
+	</plurals>
+	<plurals name="timespan_months_abbr"
+	         tools:ignore="MissingQuantity">
+		<item quantity="other">%d months</item>
+	</plurals>
+	<plurals name="timespan_weeks_abbr"
+	         tools:ignore="MissingQuantity">
+		<item quantity="other">%d weeks</item>
+	</plurals>
+	<plurals name="timespan_days_abbr"
+	         tools:ignore="MissingQuantity">
+		<item quantity="other">%d days</item>
+	</plurals>
+	<plurals name="timespan_hours_abbr"
+	         tools:ignore="MissingQuantity">
+		<item quantity="other">%d hours</item>
+	</plurals>
+	<plurals name="timespan_minutes_abbr"
+	         tools:ignore="MissingQuantity">
+		<item quantity="other">%d minutes</item>
+	</plurals>
+	<plurals name="timespan_seconds_abbr"
+	         tools:ignore="MissingQuantity">
+		<item quantity="other">%d seconds</item>
+	</plurals>
+
+
+</resources>

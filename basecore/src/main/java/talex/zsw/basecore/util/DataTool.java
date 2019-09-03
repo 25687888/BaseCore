@@ -1,5 +1,9 @@
 package talex.zsw.basecore.util;
 
+import android.content.ContentResolver;
+import android.content.res.Resources;
+import android.net.Uri;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -81,22 +85,6 @@ public class DataTool
 	}
 
 	/**
-	 * 隐藏手机中间4位号码
-	 * 130****0000
-	 *
-	 * @param mobile_phone 手机号码
-	 * @return 130****0000
-	 */
-	public static String hideMobilePhone4(String mobile_phone)
-	{
-		if(mobile_phone.length() != 11)
-		{
-			return "手机号码不正确";
-		}
-		return mobile_phone.substring(0, 3)+"****"+mobile_phone.substring(7, 11);
-	}
-
-	/**
 	 * 格式化银行卡 加*
 	 * 3749 **** **** 330
 	 *
@@ -105,7 +93,7 @@ public class DataTool
 	 */
 	public static String formatCard(String cardNo)
 	{
-		if(cardNo.length() < 8)
+		if(cardNo == null || cardNo.length() < 8)
 		{
 			return "银行卡号有误";
 		}
@@ -116,6 +104,59 @@ public class DataTool
 	}
 
 	/**
+	 * 格式化身份证 加*
+	 * 33042419901101****
+	 *
+	 * @param certNo 身份证号
+	 * @return 33042419901101****
+	 */
+	public static String formatCert(String certNo)
+	{
+		if(certNo == null || certNo.length() < 15)
+		{
+			return "无效身份证号";
+		}
+		String card = "";
+		card = certNo.substring(0, certNo.length()-8)+"****";
+		card += certNo.substring(certNo.length()-4);
+		return card;
+	}
+
+	/**
+	 * 格式化身份证 加*
+	 * 33042419901101****
+	 *
+	 * @param name 姓名
+	 * @return 赵*
+	 */
+	public static String formatName(String name)
+	{
+		if(name == null || name.length() < 1)
+		{
+			return "无姓名";
+		}
+		String card = "";
+		card = name.substring(0, name.length()-1)+"*";
+		return card;
+	}
+
+	/**
+	 * 隐藏手机中间4位号码
+	 * 130****0000
+	 *
+	 * @param mobile_phone 手机号码
+	 * @return 130****0000
+	 */
+	public static String formatPhone(String mobile_phone)
+	{
+		if(mobile_phone == null || mobile_phone.length() != 11)
+		{
+			return mobile_phone;
+		}
+		return mobile_phone.substring(0, 3)+"****"+mobile_phone.substring(7, 11);
+	}
+
+	/**
 	 * 银行卡后四位
 	 *
 	 * @param cardNo
@@ -123,7 +164,7 @@ public class DataTool
 	 */
 	public static String formatCardEnd4(String cardNo)
 	{
-		if(cardNo.length() < 8)
+		if(cardNo == null || cardNo.length() < 8)
 		{
 			return "银行卡号有误";
 		}
@@ -136,13 +177,23 @@ public class DataTool
 	 * 字符串转换成整数 ,转换失败将会 return 0;
 	 *
 	 * @param str 字符串
-	 * @return
 	 */
 	public static int string2Int(String str)
 	{
+		return string2Int(str, 0);
+	}
+
+	/**
+	 * 字符串转换成整数 ,转换失败将会 return 0;
+	 *
+	 * @param str 字符串
+	 * @param def 默认返回
+	 */
+	public static int string2Int(String str, int def)
+	{
 		if(isNullString(str))
 		{
-			return 0;
+			return def;
 		}
 		else
 		{
@@ -152,7 +203,7 @@ public class DataTool
 			}
 			catch(NumberFormatException e)
 			{
-				return 0;
+				return def;
 			}
 		}
 	}
@@ -165,19 +216,19 @@ public class DataTool
 	 */
 	public static int[] string2Ints(String s)
 	{
-		int[] n = new int[s.length()];
 		if(isNullString(s))
 		{
-
+			return null;
 		}
 		else
 		{
+			int[] n = new int[s.length()];
 			for(int i = 0; i < s.length(); i++)
 			{
 				n[i] = Integer.parseInt(s.substring(i, i+1));
 			}
+			return n;
 		}
-		return n;
 	}
 
 	/**
@@ -202,13 +253,23 @@ public class DataTool
 	 * 字符串转换成long ,转换失败将会 return 0;
 	 *
 	 * @param str 字符串
-	 * @return
 	 */
 	public static long string2Long(String str)
 	{
+		return string2Long(str, 0);
+	}
+
+	/**
+	 * 字符串转换成long ,转换失败将会 return 0;
+	 *
+	 * @param str 字符串
+	 * @param def 默认返回
+	 */
+	public static long string2Long(String str, long def)
+	{
 		if(isNullString(str))
 		{
-			return 0;
+			return def;
 		}
 		else
 		{
@@ -218,7 +279,7 @@ public class DataTool
 			}
 			catch(NumberFormatException e)
 			{
-				return 0;
+				return def;
 			}
 		}
 	}
@@ -227,13 +288,23 @@ public class DataTool
 	 * 字符串转换成double ,转换失败将会 return 0;
 	 *
 	 * @param str 字符串
-	 * @return
 	 */
 	public static double string2Double(String str)
 	{
+		return string2Double(str, 0);
+	}
+
+	/**
+	 * 字符串转换成double ,转换失败将会 return 0;
+	 *
+	 * @param str 字符串
+	 * @param def 默认返回
+	 */
+	public static double string2Double(String str, double def)
+	{
 		if(isNullString(str))
 		{
-			return 0;
+			return def;
 		}
 		else
 		{
@@ -243,7 +314,7 @@ public class DataTool
 			}
 			catch(NumberFormatException e)
 			{
-				return 0;
+				return def;
 			}
 		}
 	}
@@ -256,9 +327,21 @@ public class DataTool
 	 */
 	public static float string2Float(String str)
 	{
+		return string2Float(str, 0f);
+	}
+
+	/**
+	 * 字符串转换成浮点型 Float
+	 *
+	 * @param str 待转换的字符串
+	 * @param def 默认返回
+	 * @return 转换后的 float
+	 */
+	public static float string2Float(String str, float def)
+	{
 		if(isNullString(str))
 		{
-			return 0;
+			return def;
 		}
 		else
 		{
@@ -268,7 +351,7 @@ public class DataTool
 			}
 			catch(NumberFormatException e)
 			{
-				return 0;
+				return def;
 			}
 		}
 	}
@@ -547,6 +630,10 @@ public class DataTool
 	 */
 	public static String bytes2HexString(byte[] bytes)
 	{
+		if(bytes == null)
+		{
+			return "";
+		}
 		char[] ret = new char[bytes.length << 1];
 		for(int i = 0, j = 0; i < bytes.length; i++)
 		{
@@ -566,6 +653,10 @@ public class DataTool
 	 */
 	public static String bytes2HexStringWithBlank(byte[] bytes)
 	{
+		if(bytes == null)
+		{
+			return "";
+		}
 		String string = "";
 		for(int j = 0; j < bytes.length; j++)
 		{
@@ -593,6 +684,10 @@ public class DataTool
 	 */
 	public static String bytes2HexString(byte[] bytes, int start, int end)
 	{
+		if(bytes == null)
+		{
+			return "";
+		}
 		String string = "";
 		for(int j = start; j < end; j++)
 		{
@@ -641,6 +736,10 @@ public class DataTool
 	 */
 	public static String bytes2String(byte[] bytes)
 	{
+		if(bytes == null)
+		{
+			return "";
+		}
 		String string = "";
 		int start = 0;
 		int end = bytes.length;
@@ -667,6 +766,10 @@ public class DataTool
 	 */
 	public static String bytes2String(byte[] bytes, int start, int end)
 	{
+		if(bytes == null)
+		{
+			return "";
+		}
 		String string = "";
 		byte[] by = new byte[end-start];
 
@@ -683,6 +786,31 @@ public class DataTool
 			e.printStackTrace();
 		}
 		return string;
+	}
+
+	private final static String mHexStr = "0123456789ABCDEF";
+
+	/**
+	 * 十六进制字符串转换成 ASCII字符串
+	 *
+	 * @param hexStr String Byte字符串
+	 * @return String 对应的字符串
+	 */
+	public static String hexStr2Str(String hexStr)
+	{
+		hexStr = hexStr.toString().trim().replace(" ", "").toUpperCase(Locale.US);
+		char[] hexs = hexStr.toCharArray();
+		byte[] bytes = new byte[hexStr.length()/2];
+		int iTmp = 0x00;
+		;
+
+		for(int i = 0; i < bytes.length; i++)
+		{
+			iTmp = mHexStr.indexOf(hexs[2*i]) << 4;
+			iTmp |= mHexStr.indexOf(hexs[2*i+1]);
+			bytes[i] = (byte) (iTmp & 0xFF);
+		}
+		return new String(bytes);
 	}
 
 
@@ -1280,6 +1408,18 @@ public class DataTool
 	}
 
 	/**
+	 * 如果为空则返回默认值
+	 */
+	public static <T> T getOrDefault(final T object, final T defaultObject)
+	{
+		if(object == null)
+		{
+			return defaultObject;
+		}
+		return object;
+	}
+
+	/**
 	 * 字符串的转义(处理特殊字符)
 	 */
 	public static String stringToString(String input)
@@ -1337,7 +1477,7 @@ public class DataTool
 		{
 			Pattern p = Pattern.compile("\\s*|\t|\r|\n");
 			Matcher m = p.matcher(str);
-			dest = m.replaceAll(" ");
+			dest = m.replaceAll("");
 		}
 		return dest;
 	}
@@ -1618,5 +1758,33 @@ public class DataTool
 			value += (bytes[i] & 0x000000FF) << shift;// 往高位游
 		}
 		return value;
+	}
+
+	// ----------------------------------------------------------
+
+	/**
+	 * 资源id 转 Uri
+	 */
+	public static Uri resId2Uri(int resId)
+	{
+		Resources r = Tool.getContext().getResources();
+		return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE+"://"+r.getResourcePackageName(resId)+"/"+
+			                 r.getResourceTypeName(resId)+"/"+r.getResourceEntryName(resId));
+	}
+
+	/**
+	 * 从资源获取字符串
+	 */
+	public static String getString(int resId)
+	{
+		String string = Tool.getContext().getResources().getString(resId);
+		if(RegTool.isEmpty(string))
+		{
+			return "";
+		}
+		else
+		{
+			return Tool.getContext().getResources().getString(resId);
+		}
 	}
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    A custom layout for each tab that ensures the two tabs fill
+    all the available horizontal space. Otherwise, by default the
+    two tabs will be left-justified.
+-->
+<TextView
+	android:id="@+id/tabText"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="0dp"
+	android:layout_height="wrap_content"
+	android:layout_weight="1"
+	android:background="@drawable/bg_black_top_c"
+	android:gravity="center"
+	android:paddingBottom="@dimen/dp_11"
+	android:paddingTop="@dimen/dp_11"
+	android:textColor="@color/white"
+	android:textSize="@dimen/sp_16"
+	android:visibility="visible"/>

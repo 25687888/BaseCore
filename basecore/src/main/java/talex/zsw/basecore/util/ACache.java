@@ -39,6 +39,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * 缓存类
  */
+@SuppressWarnings("ALL")
 public class ACache
 {
 	public static final int TIME_HOUR = 60*60;
@@ -47,6 +48,23 @@ public class ACache
 	private static final int MAX_COUNT = Integer.MAX_VALUE; // 不限制存放数据的数量
 	private static Map<String, ACache> mInstanceMap = new HashMap<String, ACache>();
 	private ACacheManager mCache;
+
+	private volatile static ACache instance;
+
+	public static ACache getInstance()
+	{
+		if(instance == null)
+		{
+			synchronized(ACache.class)
+			{//锁
+				if(instance == null)
+				{
+					instance = ACache.get(Tool.getContext());
+				}
+			}
+		}
+		return instance;
+	}
 
 	public static ACache get(Context ctx)
 	{
@@ -115,7 +133,7 @@ public class ACache
 			this.file = file;
 		}
 
-		public void close() throws IOException
+		@Override public void close() throws IOException
 		{
 			super.close();
 			mCache.put(file);

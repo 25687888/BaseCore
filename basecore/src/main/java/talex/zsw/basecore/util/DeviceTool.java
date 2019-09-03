@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -37,8 +38,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import java.lang.reflect.Method;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -174,9 +173,18 @@ public class DeviceTool
 				                                 .getApplicationContext()
 				                                 .getContentResolver(), Settings.Secure.ANDROID_ID);
 		}
-		if(mTelephony.getDeviceId() != null)
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
 		{
-			id = mTelephony.getDeviceId();
+			id = mTelephony != null ? mTelephony.getImei() : "";
+		}
+		else
+		{
+			id = mTelephony != null ? mTelephony.getDeviceId() : "";
+		}
+
+		if(RegTool.isNotEmpty(id))
+		{
+			return id;
 		}
 		else
 		{
@@ -184,8 +192,8 @@ public class DeviceTool
 			id = Settings.Secure.getString(context
 				                               .getApplicationContext()
 				                               .getContentResolver(), Settings.Secure.ANDROID_ID);
+			return id;
 		}
-		return id;
 	}
 
 	/**
@@ -658,20 +666,20 @@ public class DeviceTool
 	 * @param context 上下文
 	 * @return MAC地址
 	 */
-	@SuppressLint("MissingPermission") public static String getMacAddress(Context context)
-	{
-		WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-		WifiInfo info = wifi.getConnectionInfo();
-		if(info != null)
-		{
-			String macAddress = info.getMacAddress();
-			if(macAddress != null)
-			{
-				return macAddress.replace(":", "");
-			}
-		}
-		return null;
-	}
+//	@SuppressLint("MissingPermission") public static String getMacAddress(Context context)
+//	{
+//		WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+//		WifiInfo info = wifi.getConnectionInfo();
+//		if(info != null)
+//		{
+//			String macAddress = info.getMacAddress();
+//			if(macAddress != null)
+//			{
+//				return macAddress.replace(":", "");
+//			}
+//		}
+//		return null;
+//	}
 
 	/**
 	 * 获取设备MAC地址
@@ -680,25 +688,22 @@ public class DeviceTool
 	 * @return MAC地址
 	 */
 
-	public static String getMacAddress()
+	@SuppressLint("HardwareIds") public static String getMacAddress()
 	{
 		String macAddress = null;
-		LineNumberReader lnr = null;
-		InputStreamReader isr = null;
-		try
+
+		WifiManager wifi = (WifiManager) Tool
+			.getContext()
+			.getApplicationContext()
+			.getSystemService(Context.WIFI_SERVICE);
+		WifiInfo info = null;
+		if(wifi != null)
 		{
-			Process pp = Runtime.getRuntime().exec("cat /sys/class/net/wlan0/address");
-			isr = new InputStreamReader(pp.getInputStream());
-			lnr = new LineNumberReader(isr);
-			macAddress = lnr.readLine().replace(":", "");
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			FileTool.closeIO(lnr, isr);
+			info = wifi.getConnectionInfo();
+			if(info != null)
+			{
+				macAddress = info.getMacAddress();
+			}
 		}
 
 		if(RegTool.isNullString(macAddress))
@@ -732,6 +737,10 @@ public class DeviceTool
 				e.printStackTrace();
 				return "02:00:00:00:00:00";
 			}
+		}
+		if(RegTool.isNullString(macAddress))
+		{
+			macAddress = "02:00:00:00:00:00";
 		}
 		return macAddress;
 	}
@@ -1302,7 +1311,49 @@ public class DeviceTool
 		{
 			e.printStackTrace();
 		}
-		LogTool.d("ip == "+ip);
+		LogTool.d("BaseCore", "ip == "+ip);
 		return ip;
+	}
+
+	/**
+	 * 设备重启
+	 * {@code <uses-permission android:name="android.permission.REBOOT" />}</p>
+	 *
+	 * @param reason code to pass to the kernel (e.g., "recovery") to
+	 *               request special boot modes, or null.
+	 */
+	public static void reboot(final String reason)
+	{
+		PowerManager mPowerManager = (PowerManager) Tool.getContext().getSystemService(Context.POWER_SERVICE);
+		try
+		{
+			if(mPowerManager == null)
+			{
+				return;
+			}
+			mPowerManager.reboot(reason);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 重启到 recovery
+	 * <p>需要root权限</p>
+	 */
+	public static void reboot2Recovery()
+	{
+		ShellTool.execCmd("reboot recovery", true);
+	}
+
+	/**
+	 * 重启到 bootloader
+	 * <p>需要root权限</p>
+	 */
+	public static void reboot2Bootloader()
+	{
+		ShellTool.execCmd("reboot bootloader", true);
 	}
 }

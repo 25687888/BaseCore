@@ -13,12 +13,16 @@ import com.google.gson.JsonSerializer;
 import com.google.gson.LongSerializationPolicy;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -37,17 +41,26 @@ public class JsonTool
 	private static Gson getGson()
 	{
 		GsonBuilder gb = new GsonBuilder();
+		gb.setLenient();
 		gb.setLongSerializationPolicy(LongSerializationPolicy.STRING);
 		gb.registerTypeAdapter(Double.class, new JsonSerializer<Double>()
 		{
 			@Override public JsonElement serialize(Double originalValue, Type typeOf, JsonSerializationContext context)
 			{
 				BigDecimal bigValue = BigDecimal.valueOf(originalValue);
-				if(originalValue == bigValue.intValue())
+				if(originalValue == originalValue.longValue())
 				{
-					return new JsonPrimitive(bigValue.intValue());
+					return new JsonPrimitive(originalValue.longValue());
 				}
-				return new JsonPrimitive(originalValue);
+				return new JsonPrimitive(bigValue.toPlainString());
+			}
+		});
+		gb.registerTypeAdapter(Long.class, new JsonSerializer<Long>()
+		{
+			@Override public JsonElement serialize(Long originalValue, Type typeOf, JsonSerializationContext context)
+			{
+				BigDecimal bigValue = BigDecimal.valueOf(originalValue);
+				return new JsonPrimitive(bigValue.toPlainString());
 			}
 		});
 		gb.registerTypeAdapter(Integer.class, new JsonSerializer<Integer>()
@@ -55,7 +68,18 @@ public class JsonTool
 			@Override public JsonElement serialize(Integer originalValue, Type typeOf, JsonSerializationContext context)
 			{
 				BigDecimal bigValue = BigDecimal.valueOf(originalValue);
-
+				return new JsonPrimitive(bigValue.toPlainString());
+			}
+		});
+		gb.registerTypeAdapter(Float.class, new JsonSerializer<Float>()
+		{
+			@Override public JsonElement serialize(Float originalValue, Type typeOf, JsonSerializationContext context)
+			{
+				BigDecimal bigValue = BigDecimal.valueOf(originalValue);
+				if(originalValue == originalValue.longValue())
+				{
+					return new JsonPrimitive(originalValue.longValue());
+				}
 				return new JsonPrimitive(bigValue.toPlainString());
 			}
 		});
@@ -111,7 +135,7 @@ public class JsonTool
 	/**
 	 * 将object解析成指定泛型并返回
 	 * TypeToken token =  new TypeToken<ArrayList<BannerVo>>(){};
-	 * val list = JsonUtil.getObject(response.dataInfo, object : TypeToken<ArrayList<SearchOrderVo>>(){})
+	 * val list = JsonTool.getObject(response.data, object : TypeToken<ArrayList<SearchOrderVo>>(){})
 	 *
 	 * @param obj   json数据的object
 	 * @param token 解析类型token
@@ -130,7 +154,7 @@ public class JsonTool
 	/**
 	 * 将object解析成指定泛型并返回
 	 * TypeToken token =  new TypeToken<ArrayList<BannerVo>>(){};
-	 * val list = JsonUtil.getObject(response.dataInfo, object : TypeToken<ArrayList<SearchOrderVo>>(){})
+	 * val list = JsonTool.getObject(response.data, object : TypeToken<ArrayList<SearchOrderVo>>(){})
 	 *
 	 * @param string json数据
 	 * @param token  解析类型token
@@ -209,5 +233,86 @@ public class JsonTool
 	{
 		String jsonStr = getJsonString(obj);
 		return getMapFromJson(jsonStr);
+	}
+
+	/**
+	 * 将json 数组转换为Map 对象
+	 *
+	 * @param jsonString
+	 * @return
+	 */
+	public static Map<String, Object> getMap(String jsonString)
+	{
+		JSONObject jsonObject;
+		try
+		{
+			jsonObject = new JSONObject(jsonString);
+			@SuppressWarnings("unchecked") Iterator<String> keyIter = jsonObject.keys();
+			String key;
+			Object value;
+			Map<String, Object> valueMap = new HashMap<String, Object>();
+			while(keyIter.hasNext())
+			{
+				key = (String) keyIter.next();
+				value = jsonObject.get(key);
+				valueMap.put(key, value);
+			}
+			return valueMap;
+		}
+		catch(JSONException e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * 将json 数组转换为Map 对象
+	 *
+	 * @param obj
+	 * @return
+	 */
+	public static Map<String, Object> getMap(Object obj)
+	{
+		String jsonStr = getJsonString(obj);
+		return getMap(jsonStr);
+	}
+
+
+	/**
+	 * 把json 转换为ArrayList 形式
+	 *
+	 * @return
+	 */
+	public static List<Map<String, Object>> getList(String jsonString)
+	{
+		List<Map<String, Object>> list = null;
+		try
+		{
+			JSONArray jsonArray = new JSONArray(jsonString);
+			JSONObject jsonObject;
+			list = new ArrayList<Map<String, Object>>();
+			for(int i = 0; i < jsonArray.length(); i++)
+			{
+				jsonObject = jsonArray.getJSONObject(i);
+				list.add(getMap(jsonObject.toString()));
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	/**
+	 * 把json 转换为ArrayList 形式
+	 *
+	 * @return
+	 */
+	public static List<Map<String, Object>> getList(Object obj)
+	{
+		String jsonStr = getJsonString(obj);
+		return getList(jsonStr);
 	}
 }
